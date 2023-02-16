@@ -71,8 +71,9 @@ public class PostgresTableGenerator {
             sb.append(" ");
             isTemporaryTable = true;
             sb.append(Randomly.fromOptions("TEMPORARY", "TEMP"));
-        } else if (Randomly.getBoolean()) {
-            sb.append(" UNLOGGED");
+        // ERROR: Expected DATABASE, SCHEMA, ROLE, USER, TYPE, INDEX, SINK, SOURCE, TABLE, SECRET, [OR REPLACE] [TEMPORARY] VIEW, or [OR REPLACE] MATERIALIZED VIEW after CREATE, found identifier "unlogged"
+        //} else if (Randomly.getBoolean()) {
+        //    sb.append(" UNLOGGED");
         }
         sb.append(" TABLE");
         if (Randomly.getBoolean()) {
@@ -112,7 +113,8 @@ public class PostgresTableGenerator {
         sb.append(")");
         generateInherits();
         generatePartitionBy();
-        generateUsing();
+        // java.lang.IndexOutOfBoundsException: Index 0 out of bounds for length 0
+        //generateUsing();
         PostgresCommon.generateWith(sb, globalState, errors);
         if (Randomly.getBoolean() && isTemporaryTable) {
             sb.append(" ON COMMIT ");
@@ -189,7 +191,7 @@ public class PostgresTableGenerator {
         sb.append(")");
     }
 
-    private void generateUsing() {
+    @SuppressWarnings("unused") private void generateUsing() {
         /*
          * Postgres does not allow specifying USING clause for partitioned tables since they don't have any storage
          * associated with them
@@ -257,11 +259,13 @@ public class PostgresTableGenerator {
                 errors.add("conflicting NULL/NOT NULL declarations");
                 break;
             case UNIQUE:
-                sb.append("UNIQUE");
+                // ERROR: CREATE TABLE with a primary key or unique constraint is unsupported
+                // sb.append("UNIQUE");
                 break;
             case PRIMARY_KEY:
-                sb.append("PRIMARY KEY");
-                columnHasPrimaryKey = true;
+                // ERROR: CREATE TABLE with a primary key or unique constraint is unsupported
+                // sb.append("PRIMARY KEY");
+                // columnHasPrimaryKey = true;
                 break;
             case DEFAULT:
                 sb.append("DEFAULT");

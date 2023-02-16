@@ -56,25 +56,27 @@ public class PostgresGlobalState extends SQLGlobalState<PostgresOptions, Postgre
 
     private List<String> getOpclasses(SQLConnection con) throws SQLException {
         List<String> opClasses = new ArrayList<>();
-        try (Statement s = con.createStatement()) {
-            try (ResultSet rs = s.executeQuery("select opcname FROM pg_opclass;")) {
-                while (rs.next()) {
-                    opClasses.add(rs.getString(1));
-                }
-            }
-        }
+        // ERROR: unknown catalog item 'pg_opclass'
+        //try (Statement s = con.createStatement()) {
+        //    try (ResultSet rs = s.executeQuery("select opcname FROM pg_opclass;")) {
+        //        while (rs.next()) {
+        //            opClasses.add(rs.getString(1));
+        //        }
+        //    }
+        //}
         return opClasses;
     }
 
     private List<String> getOperators(SQLConnection con) throws SQLException {
         List<String> operators = new ArrayList<>();
-        try (Statement s = con.createStatement()) {
-            try (ResultSet rs = s.executeQuery("SELECT oprname FROM pg_operator;")) {
-                while (rs.next()) {
-                    operators.add(rs.getString(1));
-                }
-            }
-        }
+        // ERROR: unknown catalog item 'pg_operator'
+        //try (Statement s = con.createStatement()) {
+        //    try (ResultSet rs = s.executeQuery("SELECT oprname FROM pg_operator;")) {
+        //        while (rs.next()) {
+        //            operators.add(rs.getString(1));
+        //        }
+        //    }
+        //}
         return operators;
     }
 

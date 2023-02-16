@@ -80,12 +80,13 @@ public final class PostgresIndexGenerator {
                 // sb.append("COLLATE ");
                 // sb.append(Randomly.fromOptions("C", "POSIX"));
                 // }
-                if (Randomly.getBooleanWithRatherLowProbability()) {
-                    sb.append(" ");
-                    sb.append(globalState.getRandomOpclass());
-                    errors.add("does not accept");
-                    errors.add("does not exist for access method");
-                }
+                // ERROR: unknown catalog item 'pg_opclass'
+                //if (Randomly.getBooleanWithRatherLowProbability()) {
+                //    sb.append(" ");
+                //    sb.append(globalState.getRandomOpclass());
+                //    errors.add("does not accept");
+                //    errors.add("does not exist for access method");
+                //}
                 if (Randomly.getBoolean()) {
                     sb.append(" ");
                     sb.append(Randomly.fromOptions("ASC", "DESC"));

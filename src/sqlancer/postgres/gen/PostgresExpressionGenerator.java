@@ -391,10 +391,11 @@ public class PostgresExpressionGenerator implements ExpressionGenerator<Postgres
             return generateFunction(depth + 1, PostgresDataType.TEXT);
         case CONCAT:
             return generateConcat(depth);
-        case COLLATE:
-            assert !expectedResult;
-            return new PostgresCollate(generateExpression(depth + 1, PostgresDataType.TEXT), globalState == null
-                    ? Randomly.fromOptions("C", "POSIX", "de_CH.utf8", "es_CR.utf8") : globalState.getRandomCollate());
+        // java.lang.IndexOutOfBoundsException: Index 0 out of bounds for length 0
+        //case COLLATE:
+        //    assert !expectedResult;
+        //    return new PostgresCollate(generateExpression(depth + 1, PostgresDataType.TEXT), globalState == null
+        //            ? Randomly.fromOptions("C", "POSIX", "de_CH.utf8", "es_CR.utf8") : globalState.getRandomCollate());
         default:
             throw new AssertionError();
         }

@@ -288,7 +288,8 @@ public class PostgresProvider extends SQLProviderAdapter<PostgresGlobalState, Po
     }
 
     protected void readFunctions(PostgresGlobalState globalState) throws SQLException {
-        SQLQueryAdapter query = new SQLQueryAdapter("SELECT proname, provolatile FROM pg_proc;");
+        // ERROR: column "provolatile" does not exist
+        SQLQueryAdapter query = new SQLQueryAdapter("SELECT proname, 1 FROM pg_proc;");
         SQLancerResultSet rs = query.executeAndGet(globalState);
         while (rs.next()) {
             String functionName = rs.getString(1);
@@ -326,17 +327,18 @@ public class PostgresProvider extends SQLProviderAdapter<PostgresGlobalState, Po
         StringBuilder sb = new StringBuilder();
         sb.append("CREATE DATABASE " + databaseName + " ");
         if (Randomly.getBoolean() && ((PostgresOptions) state.getDbmsSpecificOptions()).testCollations) {
-            if (Randomly.getBoolean()) {
-                sb.append("WITH ENCODING '");
-                sb.append(Randomly.fromOptions("utf8"));
-                sb.append("' ");
-            }
+            //if (Randomly.getBoolean()) {
+            //    sb.append("WITH ENCODING '");
+            //    sb.append(Randomly.fromOptions("utf8"));
+            //    sb.append("' ");
+            //}
             for (String lc : Arrays.asList("LC_COLLATE", "LC_CTYPE")) {
                 if (!state.getCollates().isEmpty() && Randomly.getBoolean()) {
                     sb.append(String.format(" %s = '%s'", lc, Randomly.fromList(state.getCollates())));
                 }
             }
-            sb.append(" TEMPLATE template0");
+            // org.postgresql.util.PSQLException: ERROR: Expected end of statement, found identifier "template"
+            //sb.append(" TEMPLATE template0");
         }
         return sb.toString();
     }
