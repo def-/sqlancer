@@ -429,25 +429,25 @@ public abstract class PostgresConstant implements PostgresExpression {
 
     }
 
-    public static class InetConstant extends PostgresConstantBase {
+    //public static class InetConstant extends PostgresConstantBase {
 
-        private final String val;
+    //    private final String val;
 
-        public InetConstant(String val) {
-            this.val = "'" + val + "'";
-        }
+    //    public InetConstant(String val) {
+    //        this.val = "'" + val + "'";
+    //    }
 
-        @Override
-        public String getTextRepresentation() {
-            return String.valueOf(val);
-        }
+    //    @Override
+    //    public String getTextRepresentation() {
+    //        return String.valueOf(val);
+    //    }
 
-        @Override
-        public PostgresDataType getExpressionType() {
-            return PostgresDataType.INET;
-        }
+    //    @Override
+    //    public PostgresDataType getExpressionType() {
+    //        return PostgresDataType.INET;
+    //    }
 
-    }
+    //}
 
     public static class FloatConstant extends PostgresConstantBase {
 
@@ -507,7 +507,8 @@ public abstract class PostgresConstant implements PostgresExpression {
 
         @Override
         public String getTextRepresentation() {
-            return String.format("B'%s'", Long.toBinaryString(val));
+            //return String.format("B'%s'", Long.toBinaryString(val));
+            return String.format("%d", val);
         }
 
         @Override
@@ -590,8 +591,8 @@ public abstract class PostgresConstant implements PostgresExpression {
         return new BitConstant(integer);
     }
 
-    public static PostgresExpression createInetConstant(String val) {
-        return new InetConstant(val);
-    }
+    //public static PostgresExpression createInetConstant(String val) {
+    //    return new InetConstant(val);
+    //}
 
 }

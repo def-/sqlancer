@@ -311,8 +311,8 @@ public class PostgresExpressionGenerator implements ExpressionGenerator<Postgres
             case DECIMAL:
             case REAL:
             case FLOAT:
-            case MONEY:
-            case INET:
+            //case MONEY:
+            //case INET:
                 return generateConstant(r, dataType);
             case BIT:
                 return generateBitExpression(depth);
@@ -330,10 +330,10 @@ public class PostgresExpressionGenerator implements ExpressionGenerator<Postgres
         case DECIMAL: // TODO
         case FLOAT:
         case INT:
-        case MONEY:
+        //case MONEY:
         case RANGE:
         case REAL:
-        case INET:
+        //case INET:
             return PostgresCompoundDataType.create(type);
         case TEXT: // TODO
         case BIT:
@@ -370,18 +370,18 @@ public class PostgresExpressionGenerator implements ExpressionGenerator<Postgres
     }
 
     private enum TextExpression {
-        CAST, FUNCTION, CONCAT, COLLATE
+        CAST, FUNCTION, CONCAT//, COLLATE
     }
 
     private PostgresExpression generateTextExpression(int depth) {
         TextExpression option;
         List<TextExpression> validOptions = new ArrayList<>(Arrays.asList(TextExpression.values()));
-        if (expectedResult) {
-            validOptions.remove(TextExpression.COLLATE);
-        }
-        if (!globalState.getDbmsSpecificOptions().testCollations) {
-            validOptions.remove(TextExpression.COLLATE);
-        }
+        //if (expectedResult) {
+        //    validOptions.remove(TextExpression.COLLATE);
+        //}
+        //if (!globalState.getDbmsSpecificOptions().testCollations) {
+        //    validOptions.remove(TextExpression.COLLATE);
+        //}
         option = Randomly.fromList(validOptions);
 
         switch (option) {
@@ -506,11 +506,11 @@ public class PostgresExpressionGenerator implements ExpressionGenerator<Postgres
         case RANGE:
             return PostgresConstant.createRange(r.getInteger(), Randomly.getBoolean(), r.getInteger(),
                     Randomly.getBoolean());
-        case MONEY:
-            return new PostgresCastOperation(generateConstant(r, PostgresDataType.FLOAT),
-                    getCompoundDataType(PostgresDataType.MONEY));
-        case INET:
-            return PostgresConstant.createInetConstant(getRandomInet(r));
+        //case MONEY:
+        //    return new PostgresCastOperation(generateConstant(r, PostgresDataType.FLOAT),
+        //            getCompoundDataType(PostgresDataType.MONEY));
+        //case INET:
+        //    return PostgresConstant.createInetConstant(getRandomInet(r));
         case BIT:
             return PostgresConstant.createBitConstant(r.getInteger());
         default:
@@ -518,16 +518,16 @@ public class PostgresExpressionGenerator implements ExpressionGenerator<Postgres
         }
     }
 
-    private static String getRandomInet(Randomly r) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < 4; i++) {
-            if (i != 0) {
-                sb.append('.');
-            }
-            sb.append(r.getInteger() & 255);
-        }
-        return sb.toString();
-    }
+    //private static String getRandomInet(Randomly r) {
+    //    StringBuilder sb = new StringBuilder();
+    //    for (int i = 0; i < 4; i++) {
+    //        if (i != 0) {
+    //            sb.append('.');
+    //        }
+    //        sb.append(r.getInteger() & 255);
+    //    }
+    //    return sb.toString();
+    //}
 
     public static PostgresExpression generateExpression(PostgresGlobalState globalState, List<PostgresColumn> columns,
             PostgresDataType type) {

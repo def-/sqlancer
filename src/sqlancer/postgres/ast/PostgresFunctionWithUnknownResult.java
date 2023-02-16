@@ -9,15 +9,15 @@ import sqlancer.postgres.gen.PostgresExpressionGenerator;
 
 public enum PostgresFunctionWithUnknownResult {
 
-    ABBREV("abbrev", PostgresDataType.TEXT, PostgresDataType.INET),
-    BROADCAST("broadcast", PostgresDataType.INET, PostgresDataType.INET),
-    FAMILY("family", PostgresDataType.INT, PostgresDataType.INET),
-    HOSTMASK("hostmask", PostgresDataType.INET, PostgresDataType.INET),
-    MASKLEN("masklen", PostgresDataType.INT, PostgresDataType.INET),
-    NETMASK("netmask", PostgresDataType.INET, PostgresDataType.INET),
-    SET_MASKLEN("set_masklen", PostgresDataType.INET, PostgresDataType.INET, PostgresDataType.INT),
-    TEXT("text", PostgresDataType.TEXT, PostgresDataType.INET),
-    INET_SAME_FAMILY("inet_same_family", PostgresDataType.BOOLEAN, PostgresDataType.INET, PostgresDataType.INET),
+    //ABBREV("abbrev", PostgresDataType.TEXT, PostgresDataType.INET),
+    //BROADCAST("broadcast", PostgresDataType.INET, PostgresDataType.INET),
+    //FAMILY("family", PostgresDataType.INT, PostgresDataType.INET),
+    //HOSTMASK("hostmask", PostgresDataType.INET, PostgresDataType.INET),
+    //MASKLEN("masklen", PostgresDataType.INT, PostgresDataType.INET),
+    //NETMASK("netmask", PostgresDataType.INET, PostgresDataType.INET),
+    //SET_MASKLEN("set_masklen", PostgresDataType.INET, PostgresDataType.INET, PostgresDataType.INT),
+    //TEXT("text", PostgresDataType.TEXT, PostgresDataType.INET),
+    //INET_SAME_FAMILY("inet_same_family", PostgresDataType.BOOLEAN, PostgresDataType.INET, PostgresDataType.INET),
 
     // https://www.postgresql.org/docs/devel/functions-admin.html#FUNCTIONS-ADMIN-SIGNAL-TABLE
     // PG_RELOAD_CONF("pg_reload_conf", PostgresDataType.BOOLEAN), // too much output
@@ -28,7 +28,7 @@ public enum PostgresFunctionWithUnknownResult {
     // CURRENT_QUERY("current_query", PostgresDataType.TEXT), // can generate false positives
     CURRENT_SCHEMA("current_schema", PostgresDataType.TEXT), // name
     // CURRENT_SCHEMAS("current_schemas", PostgresDataType.TEXT, PostgresDataType.BOOLEAN),
-    INET_CLIENT_PORT("inet_client_port", PostgresDataType.INT),
+    //INET_CLIENT_PORT("inet_client_port", PostgresDataType.INT),
     // INET_SERVER_PORT("inet_server_port", PostgresDataType.INT),
     PG_BACKEND_PID("pg_backend_pid", PostgresDataType.INT),
     PG_CURRENT_LOGFILE("pg_current_logfile", PostgresDataType.TEXT),

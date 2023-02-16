@@ -40,7 +40,7 @@ public class PostgresBinaryBitOperation extends BinaryOperatorNode<PostgresExpre
 
     @Override
     public PostgresDataType getExpressionType() {
-        return PostgresDataType.BIT;
+        return PostgresDataType.INT;
     }
 
 }

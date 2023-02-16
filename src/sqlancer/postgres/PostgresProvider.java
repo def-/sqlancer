@@ -107,7 +107,7 @@ public class PostgresProvider extends SQLProviderAdapter<PostgresGlobalState, Po
             sb.append(Randomly.fromOptions("DEFERRED", "IMMEDIATE"));
             return new SQLQueryAdapter(sb.toString());
         }), //
-        RESET_ROLE((g) -> new SQLQueryAdapter("RESET ROLE")), //
+        //RESET_ROLE((g) -> new SQLQueryAdapter("RESET ROLE")), //
         COMMENT_ON(PostgresCommentGenerator::generate), //
         RESET((g) -> new SQLQueryAdapter("RESET ALL") /*
                                                        * https://www.postgresql.org/docs/devel/sql-reset.html TODO: also
@@ -157,7 +157,7 @@ public class PostgresProvider extends SQLProviderAdapter<PostgresGlobalState, Po
             nrPerformed = r.getInteger(0, 3);
             break;
         case DELETE:
-        case RESET_ROLE:
+        //case RESET_ROLE:
         case SET:
             nrPerformed = r.getInteger(0, 5);
             break;
@@ -273,6 +273,16 @@ public class PostgresProvider extends SQLProviderAdapter<PostgresGlobalState, Po
         try (Statement s = con.createStatement()) {
             s.execute("DROP DATABASE IF EXISTS " + databaseName);
         }
+        // TOOD: How to make this work with mz_system user?
+        //try (Statement s = con.createStatement()) {
+        //    s.execute("ALTER SYSTEM SET max_tables TO 1000");
+        //}
+        //try (Statement s = con.createStatement()) {
+        //    s.execute("ALTER SYSTEM SET max_views TO 1000");
+        //}
+        //try (Statement s = con.createStatement()) {
+        //    s.execute("ALTER SYSTEM SET max_materialized_views TO 1000");
+        //}
         try (Statement s = con.createStatement()) {
             s.execute(createDatabaseCommand);
         }

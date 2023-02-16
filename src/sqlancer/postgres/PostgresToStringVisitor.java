@@ -235,14 +235,15 @@ public final class PostgresToStringVisitor extends ToStringVisitor<PostgresExpre
         case RANGE:
             sb.append("int4range");
             break;
-        case MONEY:
-            sb.append("MONEY");
-            break;
-        case INET:
-            sb.append("INET");
-            break;
+        //case MONEY:
+        //    sb.append("MONEY");
+        //    break;
+        //case INET:
+        //    sb.append("INET");
+        //    break;
         case BIT:
-            sb.append("BIT");
+            //sb.append("BIT");
+            sb.append("INT");
             // if (Randomly.getBoolean()) {
             // sb.append("(");
             // sb.append(Randomly.getNotCachedInteger(1, 100));

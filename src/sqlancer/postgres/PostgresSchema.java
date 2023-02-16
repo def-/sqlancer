@@ -31,7 +31,7 @@ public class PostgresSchema extends AbstractSchema<PostgresGlobalState, Postgres
     private final String databaseName;
 
     public enum PostgresDataType {
-        INT, BOOLEAN, TEXT, DECIMAL, FLOAT, REAL, RANGE, MONEY, BIT, INET;
+        INT, BOOLEAN, TEXT, DECIMAL, FLOAT, REAL, RANGE, BIT; //, MONEY, INET;
 
         public static PostgresDataType getRandomType() {
             List<PostgresDataType> dataTypes = new ArrayList<>(Arrays.asList(values()));
@@ -39,9 +39,9 @@ public class PostgresSchema extends AbstractSchema<PostgresGlobalState, Postgres
                 dataTypes.remove(PostgresDataType.DECIMAL);
                 dataTypes.remove(PostgresDataType.FLOAT);
                 dataTypes.remove(PostgresDataType.REAL);
-                dataTypes.remove(PostgresDataType.INET);
+                //dataTypes.remove(PostgresDataType.INET);
                 dataTypes.remove(PostgresDataType.RANGE);
-                dataTypes.remove(PostgresDataType.MONEY);
+                //dataTypes.remove(PostgresDataType.MONEY);
                 dataTypes.remove(PostgresDataType.BIT);
             }
             return Randomly.fromList(dataTypes);
@@ -134,13 +134,13 @@ public class PostgresSchema extends AbstractSchema<PostgresGlobalState, Postgres
             return PostgresDataType.REAL;
         case "int4range":
             return PostgresDataType.RANGE;
-        case "money":
-            return PostgresDataType.MONEY;
+        //case "money":
+        //    return PostgresDataType.MONEY;
         case "bit":
-        case "bit varying":
+        //case "bit varying":
             return PostgresDataType.BIT;
-        case "inet":
-            return PostgresDataType.INET;
+        //case "inet":
+        //    return PostgresDataType.INET;
         default:
             throw new AssertionError(typeString);
         }
@@ -257,13 +257,13 @@ public class PostgresSchema extends AbstractSchema<PostgresGlobalState, Postgres
 
     protected static List<PostgresStatisticsObject> getStatistics(SQLConnection con) throws SQLException {
         List<PostgresStatisticsObject> statistics = new ArrayList<>();
-        try (Statement s = con.createStatement()) {
-            try (ResultSet rs = s.executeQuery("SELECT stxname FROM pg_statistic_ext ORDER BY stxname;")) {
-                while (rs.next()) {
-                    statistics.add(new PostgresStatisticsObject(rs.getString("stxname")));
-                }
-            }
-        }
+        //try (Statement s = con.createStatement()) {
+        //    try (ResultSet rs = s.executeQuery("SELECT stxname FROM pg_statistic_ext ORDER BY stxname;")) {
+        //        while (rs.next()) {
+        //            statistics.add(new PostgresStatisticsObject(rs.getString("stxname")));
+        //        }
+        //    }
+        //}
         return statistics;
     }
 
@@ -283,7 +283,9 @@ public class PostgresSchema extends AbstractSchema<PostgresGlobalState, Postgres
         List<PostgresIndex> indexes = new ArrayList<>();
         try (Statement s = con.createStatement()) {
             try (ResultSet rs = s.executeQuery(String
-                    .format("SELECT indexname FROM pg_indexes WHERE tablename='%s' ORDER BY indexname;", tableName))) {
+                    // org.postgresql.util.PSQLException: ERROR: unknown catalog item 'pg_indexes'
+                    //.format("SELECT indexname FROM pg_indexes WHERE tablename='%s' ORDER BY indexname;", tableName))) {
+                    .format("SELECT c.relname as indexname FROM pg_catalog.pg_class c LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace LEFT JOIN pg_catalog.pg_index i ON i.indexrelid = c.oid LEFT JOIN pg_catalog.pg_class c2 ON i.indrelid = c2.oid WHERE c.relkind IN ('i','I','') AND n.nspname <> 'pg_catalog' AND n.nspname !~ '^pg_toast' AND n.nspname <> 'information_schema' AND c2.relname = '%s' AND pg_catalog.pg_table_is_visible(c.oid) ORDER BY indexname;", tableName))) {
                 while (rs.next()) {
                     String indexName = rs.getString("indexname");
                     if (DBMSCommon.matchesIndexName(indexName)) {

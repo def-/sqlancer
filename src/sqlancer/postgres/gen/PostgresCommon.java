@@ -131,17 +131,18 @@ public final class PostgresCommon {
             sb.append("boolean");
             break;
         case INT:
-            if (Randomly.getBoolean() && allowSerial) {
-                serial = true;
-                sb.append(Randomly.fromOptions("serial", "bigserial"));
-            } else {
+            //if (Randomly.getBoolean() && allowSerial) {
+            //    serial = true;
+            //    sb.append(Randomly.fromOptions("serial", "bigserial"));
+            //} else {
                 sb.append(Randomly.fromOptions("smallint", "integer", "bigint"));
-            }
+            //}
             break;
         case TEXT:
             if (Randomly.getBoolean()) {
                 sb.append("TEXT");
-            } else if (Randomly.getBoolean()) {
+            } else {
+            //} else if (Randomly.getBoolean()) {
                 // TODO: support CHAR (without VAR)
                 if (PostgresProvider.generateOnlyKnown || Randomly.getBoolean()) {
                     sb.append("VAR");
@@ -150,15 +151,18 @@ public final class PostgresCommon {
                 sb.append("(");
                 sb.append(ThreadLocalRandom.current().nextInt(1, 500));
                 sb.append(")");
-            } else {
-                sb.append("name");
             }
-            if (Randomly.getBoolean() && !PostgresProvider.generateOnlyKnown) {
-                sb.append(" COLLATE ");
-                sb.append('"');
-                sb.append(Randomly.fromList(opClasses));
-                sb.append('"');
-            }
+            // ERROR: unknown catalog item 'name'
+            //} else {
+            //    sb.append("name");
+            //}
+            // pg_collation is empty
+            //if (Randomly.getBoolean() && !PostgresProvider.generateOnlyKnown) {
+            //    sb.append(" COLLATE ");
+            //    sb.append('"');
+            //    sb.append(Randomly.fromList(opClasses));
+            //    sb.append('"');
+            //}
             break;
         case DECIMAL:
             sb.append("DECIMAL");
@@ -172,21 +176,22 @@ public final class PostgresCommon {
         case RANGE:
             sb.append(Randomly.fromOptions("int4range", "int4range")); // , "int8range", "numrange"
             break;
-        case MONEY:
-            sb.append("money");
-            break;
+        //case MONEY:
+        //    sb.append("money");
+        //    break;
         case BIT:
-            sb.append("BIT");
+            //sb.append("BIT");
+            sb.append("INT");
             // if (Randomly.getBoolean()) {
-            sb.append(" VARYING");
-            // }
-            sb.append("(");
-            sb.append(Randomly.getNotCachedInteger(1, 500));
-            sb.append(")");
+            //sb.append(" VARYING");
+            //// }
+            //sb.append("(");
+            //sb.append(Randomly.getNotCachedInteger(1, 500));
+            //sb.append(")");
             break;
-        case INET:
-            sb.append("inet");
-            break;
+        //case INET:
+        //    sb.append("inet");
+        //    break;
         default:
             throw new AssertionError(type);
         }
@@ -282,10 +287,10 @@ public final class PostgresCommon {
             errors.add("missing FROM-clause entry for table");
             break;
         case UNIQUE:
-            sb.append("UNIQUE(");
-            sb.append(randomNonEmptyColumnSubset.stream().map(c -> c.getName()).collect(Collectors.joining(", ")));
-            sb.append(")");
-            appendIndexParameters(sb, globalState, errors);
+            //sb.append("UNIQUE(");
+            //sb.append(randomNonEmptyColumnSubset.stream().map(c -> c.getName()).collect(Collectors.joining(", ")));
+            //sb.append(")");
+            //appendIndexParameters(sb, globalState, errors);
             break;
         case PRIMARY_KEY:
             sb.append("PRIMARY KEY(");
@@ -370,9 +375,9 @@ public final class PostgresCommon {
 
     private static void appendIndexParameters(StringBuilder sb, PostgresGlobalState globalState,
             ExpectedErrors errors) {
-        if (Randomly.getBoolean()) {
-            generateWith(sb, globalState, errors);
-        }
+        //if (Randomly.getBoolean()) {
+        //    generateWith(sb, globalState, errors);
+        //}
         // TODO: [ USING INDEX TABLESPACE tablespace ]
     }
 
