@@ -13,7 +13,7 @@ import sqlancer.postgres.PostgresSchema;
 import sqlancer.postgres.PostgresSchema.PostgresColumn;
 import sqlancer.postgres.PostgresSchema.PostgresDataType;
 import sqlancer.postgres.PostgresSchema.PostgresTable;
-//import sqlancer.postgres.PostgresVisitor;
+import sqlancer.postgres.PostgresVisitor;
 //import sqlancer.postgres.ast.PostgresExpression;
 
 public class PostgresTableGenerator {
@@ -270,13 +270,13 @@ public class PostgresTableGenerator {
                 break;
             case DEFAULT:
                 // TODO: Reenable when https://github.com/MaterializeInc/materialize/issues/17706 is fixed
-                //sb.append("DEFAULT");
-                //sb.append(" (");
-                //sb.append(PostgresVisitor.asString(PostgresExpressionGenerator.generateExpression(globalState, type)));
-                //sb.append(")");
-                //// CREATE TEMPORARY TABLE t1(c0 smallint DEFAULT ('566963878'));
-                //errors.add("out of range");
-                //errors.add("is a generated column");
+                sb.append("DEFAULT");
+                sb.append(" (");
+                sb.append(PostgresVisitor.asString(PostgresExpressionGenerator.generateExpression(globalState, type)));
+                sb.append(")");
+                // CREATE TEMPORARY TABLE t1(c0 smallint DEFAULT ('566963878'));
+                errors.add("out of range");
+                errors.add("is a generated column");
                 break;
             case CHECK:
                 //sb.append("CHECK (");
