@@ -49,7 +49,7 @@ import sqlancer.postgres.ast.PostgresPostfixOperation;
 import sqlancer.postgres.ast.PostgresPostfixOperation.PostfixOperator;
 import sqlancer.postgres.ast.PostgresPrefixOperation;
 import sqlancer.postgres.ast.PostgresPrefixOperation.PrefixOperator;
-import sqlancer.postgres.ast.PostgresSimilarTo;
+//import sqlancer.postgres.ast.PostgresSimilarTo;
 
 public class PostgresExpressionGenerator implements ExpressionGenerator<PostgresExpression> {
 
@@ -104,7 +104,8 @@ public class PostgresExpressionGenerator implements ExpressionGenerator<Postgres
 
     private enum BooleanExpression {
         POSTFIX_OPERATOR, NOT, BINARY_LOGICAL_OPERATOR, BINARY_COMPARISON, FUNCTION, CAST, LIKE, BETWEEN, IN_OPERATION,
-        SIMILAR_TO, POSIX_REGEX, BINARY_RANGE_COMPARISON;
+        //SIMILAR_TO,
+        POSIX_REGEX, BINARY_RANGE_COMPARISON;
     }
 
     private PostgresExpression generateFunctionWithUnknownResult(int depth, PostgresDataType type) {
@@ -148,7 +149,7 @@ public class PostgresExpressionGenerator implements ExpressionGenerator<Postgres
     private PostgresExpression generateBooleanExpression(int depth) {
         List<BooleanExpression> validOptions = new ArrayList<>(Arrays.asList(BooleanExpression.values()));
         if (PostgresProvider.generateOnlyKnown) {
-            validOptions.remove(BooleanExpression.SIMILAR_TO);
+            //validOptions.remove(BooleanExpression.SIMILAR_TO);
             validOptions.remove(BooleanExpression.POSIX_REGEX);
             validOptions.remove(BooleanExpression.BINARY_RANGE_COMPARISON);
         }
@@ -186,11 +187,11 @@ public class PostgresExpressionGenerator implements ExpressionGenerator<Postgres
             PostgresDataType type = getMeaningfulType();
             return new PostgresBetweenOperation(generateExpression(depth + 1, type),
                     generateExpression(depth + 1, type), generateExpression(depth + 1, type), Randomly.getBoolean());
-        case SIMILAR_TO:
-            assert !expectedResult;
-            // TODO also generate the escape character
-            return new PostgresSimilarTo(generateExpression(depth + 1, PostgresDataType.TEXT),
-                    generateExpression(depth + 1, PostgresDataType.TEXT), null);
+        //case SIMILAR_TO:
+        //    assert !expectedResult;
+        //    // TODO also generate the escape character
+        //    return new PostgresSimilarTo(generateExpression(depth + 1, PostgresDataType.TEXT),
+        //            generateExpression(depth + 1, PostgresDataType.TEXT), null);
         case POSIX_REGEX:
             assert !expectedResult;
             return new PostgresPOSIXRegularExpression(generateExpression(depth + 1, PostgresDataType.TEXT),
