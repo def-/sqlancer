@@ -273,20 +273,18 @@ public class PostgresProvider extends SQLProviderAdapter<PostgresGlobalState, Po
         try (Statement s = con.createStatement()) {
             s.execute("DROP DATABASE IF EXISTS " + databaseName);
         }
-        // TOOD: How to make this work with mz_system user?
-        //try (Statement s = con.createStatement()) {
-        //    s.execute("ALTER SYSTEM SET max_tables TO 1000");
-        //}
-        //try (Statement s = con.createStatement()) {
-        //    s.execute("ALTER SYSTEM SET max_views TO 1000");
-        //}
-        //try (Statement s = con.createStatement()) {
-        //    s.execute("ALTER SYSTEM SET max_materialized_views TO 1000");
-        //}
         try (Statement s = con.createStatement()) {
             s.execute(createDatabaseCommand);
         }
         con.close();
+        Connection con_mz_system = DriverManager.getConnection("jdbc:postgresql://localhost:6877/materialize", "mz_system", "materialize");
+        try (Statement s = con_mz_system.createStatement()) {
+            s.execute("ALTER SYSTEM SET max_tables TO 1000");
+        }
+        try (Statement s = con_mz_system.createStatement()) {
+            s.execute("ALTER SYSTEM SET max_materialized_views TO 1000");
+        }
+        con_mz_system.close();
         int databaseIndex = entryURL.indexOf(entryDatabaseName);
         String preDatabaseName = entryURL.substring(0, databaseIndex);
         String postDatabaseName = entryURL.substring(databaseIndex + entryDatabaseName.length());
