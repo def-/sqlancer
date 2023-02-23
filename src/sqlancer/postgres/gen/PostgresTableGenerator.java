@@ -67,14 +67,15 @@ public class PostgresTableGenerator {
     protected SQLQueryAdapter generate() {
         columnCanHavePrimaryKey = true;
         sb.append("CREATE");
-        if (Randomly.getBoolean()) {
-            sb.append(" ");
-            isTemporaryTable = true;
-            sb.append(Randomly.fromOptions("TEMPORARY", "TEMP"));
-        // ERROR: Expected DATABASE, SCHEMA, ROLE, USER, TYPE, INDEX, SINK, SOURCE, TABLE, SECRET, [OR REPLACE] [TEMPORARY] VIEW, or [OR REPLACE] MATERIALIZED VIEW after CREATE, found identifier "unlogged"
-        //} else if (Randomly.getBoolean()) {
-        //    sb.append(" UNLOGGED");
-        }
+        // https://github.com/MaterializeInc/materialize/issues/17797
+        //if (Randomly.getBoolean()) {
+        //    sb.append(" ");
+        //    isTemporaryTable = true;
+        //    sb.append(Randomly.fromOptions("TEMPORARY", "TEMP"));
+        //// ERROR: Expected DATABASE, SCHEMA, ROLE, USER, TYPE, INDEX, SINK, SOURCE, TABLE, SECRET, [OR REPLACE] [TEMPORARY] VIEW, or [OR REPLACE] MATERIALIZED VIEW after CREATE, found identifier "unlogged"
+        ////} else if (Randomly.getBoolean()) {
+        ////    sb.append(" UNLOGGED");
+        //}
         sb.append(" TABLE");
         if (Randomly.getBoolean()) {
             sb.append(" IF NOT EXISTS");

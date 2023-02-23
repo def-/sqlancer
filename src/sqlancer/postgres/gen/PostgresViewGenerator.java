@@ -25,9 +25,10 @@ public final class PostgresViewGenerator {
             if (Randomly.getBoolean()) {
                 sb.append(" OR REPLACE");
             }
-            if (Randomly.getBoolean()) {
-                sb.append(Randomly.fromOptions(" TEMP", " TEMPORARY"));
-            }
+            // https://github.com/MaterializeInc/materialize/issues/17797
+            //if (Randomly.getBoolean()) {
+            //    sb.append(Randomly.fromOptions(" TEMP", " TEMPORARY"));
+            //}
             if (Randomly.getBoolean()) {
                 sb.append(" RECURSIVE");
                 recursive = true;
