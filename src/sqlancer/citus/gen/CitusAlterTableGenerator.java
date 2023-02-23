@@ -25,10 +25,10 @@ public class CitusAlterTableGenerator extends PostgresAlterTableGenerator {
     public List<Action> getActions(ExpectedErrors errors) {
         List<Action> action = super.getActions(errors);
         CitusCommon.addCitusErrors(errors);
-        action.remove(Action.ALTER_COLUMN_SET_STATISTICS);
-        action.remove(Action.ALTER_COLUMN_SET_ATTRIBUTE_OPTION);
-        action.remove(Action.ALTER_COLUMN_RESET_ATTRIBUTE_OPTION);
-        action.remove(Action.ALTER_COLUMN_SET_STORAGE);
+        //action.remove(Action.ALTER_COLUMN_SET_STATISTICS);
+        //action.remove(Action.ALTER_COLUMN_SET_ATTRIBUTE_OPTION);
+        //action.remove(Action.ALTER_COLUMN_RESET_ATTRIBUTE_OPTION);
+        //action.remove(Action.ALTER_COLUMN_SET_STORAGE);
         action.remove(Action.DISABLE_ROW_LEVEL_SECURITY);
         action.remove(Action.ENABLE_ROW_LEVEL_SECURITY);
         action.remove(Action.FORCE_ROW_LEVEL_SECURITY);
