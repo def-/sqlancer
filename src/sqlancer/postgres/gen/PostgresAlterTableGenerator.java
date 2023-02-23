@@ -36,7 +36,7 @@ public class PostgresAlterTableGenerator {
         ALTER_COLUMN_SET_STORAGE, // ALTER [ COLUMN ] column SET STORAGE { PLAIN | EXTERNAL | EXTENDED | MAIN }
         ADD_TABLE_CONSTRAINT, // ADD table_constraint [ NOT VALID ]
         ADD_TABLE_CONSTRAINT_USING_INDEX, // ADD table_constraint_using_index
-        VALIDATE_CONSTRAINT, // VALIDATE CONSTRAINT constraint_name
+        //VALIDATE_CONSTRAINT, // VALIDATE CONSTRAINT constraint_name
         DISABLE_ROW_LEVEL_SECURITY, // DISABLE ROW LEVEL SECURITY
         ENABLE_ROW_LEVEL_SECURITY, // ENABLE ROW LEVEL SECURITY
         FORCE_ROW_LEVEL_SECURITY, // FORCE ROW LEVEL SECURITY
@@ -121,10 +121,10 @@ public class PostgresAlterTableGenerator {
         List<Action> action = getActions(errors);
         StringBuilder sb = new StringBuilder();
         sb.append("ALTER TABLE ");
-        if (Randomly.getBoolean()) {
-            sb.append(" ONLY");
-            errors.add("cannot use ONLY for foreign key on partitioned table");
-        }
+        //if (Randomly.getBoolean()) {
+        //    sb.append(" ONLY");
+        //    errors.add("cannot use ONLY for foreign key on partitioned table");
+        //}
         sb.append(" ");
         sb.append(randomTable.getName());
         sb.append(" ");
@@ -192,7 +192,7 @@ public class PostgresAlterTableGenerator {
                             PostgresExpressionGenerator.generateExpression(globalState, randomColumn.getType())));
                     errors.add("is out of range");
                     errors.add("but default expression is of type");
-                    errors.add("cannot cast");
+                    errors.add("does not support casting");
                 }
                 errors.add("is a generated column");
                 errors.add("is an identity column");
@@ -298,11 +298,11 @@ public class PostgresAlterTableGenerator {
                 errors.add("insufficient columns in PRIMARY KEY constraint definition");
                 errors.add("which is part of the partition key");
                 break;
-            case VALIDATE_CONSTRAINT:
-                sb.append("VALIDATE CONSTRAINT asdf");
-                errors.add("does not exist");
-                // FIXME select constraint
-                break;
+            //case VALIDATE_CONSTRAINT:
+            //    sb.append("VALIDATE CONSTRAINT asdf");
+            //    errors.add("does not exist");
+            //    // FIXME select constraint
+            //    break;
             case DISABLE_ROW_LEVEL_SECURITY:
                 sb.append("DISABLE ROW LEVEL SECURITY");
                 break;

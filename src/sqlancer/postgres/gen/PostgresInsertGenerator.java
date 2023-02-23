@@ -106,7 +106,7 @@ public final class PostgresInsertGenerator {
             if (i != 0) {
                 sb.append(", ");
             }
-            if (!Randomly.getBooleanWithSmallProbability() || !canBeDefault) {
+            //if (!Randomly.getBooleanWithSmallProbability() || !canBeDefault) {
                 PostgresExpression generateConstant;
                 if (Randomly.getBoolean()) {
                     generateConstant = PostgresExpressionGenerator.generateConstant(globalState.getRandomly(),
@@ -116,9 +116,9 @@ public final class PostgresInsertGenerator {
                             .generateExpression(columns.get(i).getType());
                 }
                 sb.append(PostgresVisitor.asString(generateConstant));
-            } else {
-                sb.append("DEFAULT");
-            }
+            //} else {
+            //    sb.append("DEFAULT");
+            //}
         }
         sb.append(")");
     }

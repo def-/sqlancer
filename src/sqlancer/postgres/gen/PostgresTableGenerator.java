@@ -43,7 +43,7 @@ public class PostgresTableGenerator {
         errors.add("integer out of range");
         errors.add("division by zero");
         errors.add("cannot create partitioned table as inheritance child");
-        errors.add("cannot cast");
+        errors.add("does not support casting");
         errors.add("ERROR: functions in index expression must be marked IMMUTABLE");
         errors.add("functions in partition key expression must be marked IMMUTABLE");
         errors.add("functions in index predicate must be marked IMMUTABLE");

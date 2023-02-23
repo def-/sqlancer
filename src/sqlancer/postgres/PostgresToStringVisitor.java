@@ -70,13 +70,13 @@ public final class PostgresToStringVisitor extends ToStringVisitor<PostgresExpre
 
     @Override
     public void visit(PostgresFromTable from) {
-        if (from.isOnly()) {
-            sb.append("ONLY ");
-        }
+        //if (from.isOnly()) {
+        //    sb.append("ONLY ");
+        //}
         sb.append(from.getTable().getName());
-        if (!from.isOnly() && Randomly.getBoolean()) {
-            sb.append("*");
-        }
+        //if (!from.isOnly() && Randomly.getBoolean()) {
+        //    sb.append("*");
+        //}
     }
 
     @Override
@@ -105,11 +105,11 @@ public final class PostgresToStringVisitor extends ToStringVisitor<PostgresExpre
         default:
             throw new AssertionError();
         }
-        if (s.getFetchColumns() == null) {
-            sb.append("*");
-        } else {
+        //if (s.getFetchColumns() == null) {
+        //    sb.append("*");
+        //} else {
             visit(s.getFetchColumns());
-        }
+        //}
         sb.append(" FROM ");
         visit(s.getFromList());
 
@@ -270,9 +270,9 @@ public final class PostgresToStringVisitor extends ToStringVisitor<PostgresExpre
             sb.append(" COLLATE \"C\"");
         }
         sb.append(") BETWEEN ");
-        if (op.isSymmetric()) {
-            sb.append("SYMMETRIC ");
-        }
+        //if (op.isSymmetric()) {
+        //    sb.append("SYMMETRIC ");
+        //}
         sb.append("(");
         visit(op.getLeft());
         sb.append(") AND (");

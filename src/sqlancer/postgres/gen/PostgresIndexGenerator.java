@@ -28,9 +28,9 @@ public final class PostgresIndexGenerator {
         ExpectedErrors errors = new ExpectedErrors();
         StringBuilder sb = new StringBuilder();
         sb.append("CREATE");
-        if (Randomly.getBoolean()) {
-            sb.append(" UNIQUE");
-        }
+        //if (Randomly.getBoolean()) {
+        //    sb.append(" UNIQUE");
+        //}
         sb.append(" INDEX ");
         /*
          * Commented out as a workaround for https://www.postgresql.org/message-id/CA%2Bu7OA4XYhc-
@@ -44,18 +44,18 @@ public final class PostgresIndexGenerator {
         String indexName = getNewIndexName(randomTable);
         sb.append(indexName);
         sb.append(" ON ");
-        if (Randomly.getBoolean()) {
-            sb.append("ONLY ");
-        }
+        //if (Randomly.getBoolean()) {
+        //    sb.append("ONLY ");
+        //}
         sb.append(randomTable.getName());
         IndexType method;
-        if (Randomly.getBoolean()) {
-            sb.append(" USING ");
-            method = Randomly.fromOptions(IndexType.values());
-            sb.append(method);
-        } else {
-            method = IndexType.BTREE;
-        }
+        //if (Randomly.getBoolean()) {
+        //    sb.append(" USING ");
+        //    method = Randomly.fromOptions(IndexType.values());
+        //    sb.append(method);
+        //} else {
+        method = IndexType.BTREE;
+        //}
 
         sb.append("(");
         if (method == IndexType.HASH) {
@@ -124,7 +124,7 @@ public final class PostgresIndexGenerator {
         errors.add("could not create unique index");
         errors.add("has no default operator class");
         errors.add("does not support");
-        errors.add("cannot cast");
+        errors.add("does not support casting");
         errors.add("unsupported UNIQUE constraint with partition key definition");
         errors.add("insufficient columns in UNIQUE constraint definition");
         errors.add("invalid input syntax for");
