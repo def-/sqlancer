@@ -59,6 +59,7 @@ public final class PostgresCommon {
         errors.add("invalid input syntax for type");
         errors.add("cannot cast type");
         errors.add("value overflows numeric format");
+        errors.add("numeric field overflow");
         errors.add("LIKE pattern must not end with escape character");
         errors.add("is of type boolean but expression is of type text");
         errors.add("a negative number raised to a non-integer power yields a complex result");
