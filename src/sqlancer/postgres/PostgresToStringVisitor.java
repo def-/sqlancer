@@ -232,9 +232,9 @@ public final class PostgresToStringVisitor extends ToStringVisitor<PostgresExpre
         case FLOAT:
             sb.append("REAL");
             break;
-        case RANGE:
-            sb.append("int4range");
-            break;
+        //case RANGE:
+        //    sb.append("int4range");
+        //    break;
         //case MONEY:
         //    sb.append("MONEY");
         //    break;

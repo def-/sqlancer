@@ -173,9 +173,9 @@ public final class PostgresCommon {
         case REAL:
             sb.append("FLOAT");
             break;
-        case RANGE:
-            sb.append(Randomly.fromOptions("int4range", "int4range")); // , "int8range", "numrange"
-            break;
+        //case RANGE:
+        //    sb.append(Randomly.fromOptions("int4range", "int4range")); // , "int8range", "numrange"
+        //    break;
         //case MONEY:
         //    sb.append("money");
         //    break;
