@@ -5,12 +5,12 @@ import java.util.Optional;
 import sqlancer.Randomly;
 import sqlancer.common.visitor.BinaryOperation;
 import sqlancer.common.visitor.ToStringVisitor;
-import sqlancer.postgres.PostgresSchema.PostgresDataType;
+//import sqlancer.postgres.PostgresSchema.PostgresDataType;
 import sqlancer.postgres.ast.PostgresAggregate;
 import sqlancer.postgres.ast.PostgresBetweenOperation;
 import sqlancer.postgres.ast.PostgresBinaryLogicalOperation;
 import sqlancer.postgres.ast.PostgresCastOperation;
-import sqlancer.postgres.ast.PostgresCollate;
+//import sqlancer.postgres.ast.PostgresCollate;
 import sqlancer.postgres.ast.PostgresColumnValue;
 import sqlancer.postgres.ast.PostgresConstant;
 import sqlancer.postgres.ast.PostgresExpression;
@@ -265,10 +265,10 @@ public final class PostgresToStringVisitor extends ToStringVisitor<PostgresExpre
     public void visit(PostgresBetweenOperation op) {
         sb.append("(");
         visit(op.getExpr());
-        if (PostgresProvider.generateOnlyKnown && op.getExpr().getExpressionType() == PostgresDataType.TEXT
-                && op.getLeft().getExpressionType() == PostgresDataType.TEXT) {
-            sb.append(" COLLATE \"C\"");
-        }
+        //if (PostgresProvider.generateOnlyKnown && op.getExpr().getExpressionType() == PostgresDataType.TEXT
+        //        && op.getLeft().getExpressionType() == PostgresDataType.TEXT) {
+        //    sb.append(" COLLATE \"C\"");
+        //}
         sb.append(") BETWEEN ");
         //if (op.isSymmetric()) {
         //    sb.append("SYMMETRIC ");
@@ -277,10 +277,10 @@ public final class PostgresToStringVisitor extends ToStringVisitor<PostgresExpre
         visit(op.getLeft());
         sb.append(") AND (");
         visit(op.getRight());
-        if (PostgresProvider.generateOnlyKnown && op.getExpr().getExpressionType() == PostgresDataType.TEXT
-                && op.getRight().getExpressionType() == PostgresDataType.TEXT) {
-            sb.append(" COLLATE \"C\"");
-        }
+        //if (PostgresProvider.generateOnlyKnown && op.getExpr().getExpressionType() == PostgresDataType.TEXT
+        //        && op.getRight().getExpressionType() == PostgresDataType.TEXT) {
+        //    sb.append(" COLLATE \"C\"");
+        //}
         sb.append(")");
     }
 
@@ -330,16 +330,16 @@ public final class PostgresToStringVisitor extends ToStringVisitor<PostgresExpre
         visit(op.getRegex());
     }
 
-    @Override
-    public void visit(PostgresCollate op) {
-        sb.append("(");
-        visit(op.getExpr());
-        sb.append(" COLLATE ");
-        sb.append('"');
-        sb.append(op.getCollate());
-        sb.append('"');
-        sb.append(")");
-    }
+    //@Override
+    //public void visit(PostgresCollate op) {
+    //    sb.append("(");
+    //    visit(op.getExpr());
+    //    sb.append(" COLLATE ");
+    //    sb.append('"');
+    //    sb.append(op.getCollate());
+    //    sb.append('"');
+    //    sb.append(")");
+    //}
 
     @Override
     public void visit(PostgresBinaryLogicalOperation op) {

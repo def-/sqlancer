@@ -31,7 +31,7 @@ import sqlancer.postgres.ast.PostgresBinaryLogicalOperation.BinaryLogicalOperato
 //import sqlancer.postgres.ast.PostgresBinaryRangeOperation.PostgresBinaryRangeComparisonOperator;
 //import sqlancer.postgres.ast.PostgresBinaryRangeOperation.PostgresBinaryRangeOperator;
 import sqlancer.postgres.ast.PostgresCastOperation;
-import sqlancer.postgres.ast.PostgresCollate;
+//import sqlancer.postgres.ast.PostgresCollate;
 import sqlancer.postgres.ast.PostgresColumnValue;
 import sqlancer.postgres.ast.PostgresConcatOperation;
 import sqlancer.postgres.ast.PostgresConstant;
@@ -233,10 +233,10 @@ public class PostgresExpressionGenerator implements ExpressionGenerator<Postgres
     private PostgresExpression getComparison(PostgresExpression leftExpr, PostgresExpression rightExpr) {
         PostgresBinaryComparisonOperation op = new PostgresBinaryComparisonOperation(leftExpr, rightExpr,
                 PostgresBinaryComparisonOperation.PostgresBinaryComparisonOperator.getRandom());
-        if (PostgresProvider.generateOnlyKnown && op.getLeft().getExpressionType() == PostgresDataType.TEXT
-                && op.getRight().getExpressionType() == PostgresDataType.TEXT) {
-            return new PostgresCollate(op, "C");
-        }
+        //if (PostgresProvider.generateOnlyKnown && op.getLeft().getExpressionType() == PostgresDataType.TEXT
+        //        && op.getRight().getExpressionType() == PostgresDataType.TEXT) {
+        //    return new PostgresCollate(op, "C");
+        //}
         return op;
     }
 
@@ -270,11 +270,11 @@ public class PostgresExpressionGenerator implements ExpressionGenerator<Postgres
     }
 
     private PostgresExpression potentiallyWrapInCollate(PostgresDataType dataType, PostgresExpression exprInternal) {
-        if (dataType == PostgresDataType.TEXT && PostgresProvider.generateOnlyKnown) {
-            return new PostgresCollate(exprInternal, "C");
-        } else {
+        //if (dataType == PostgresDataType.TEXT && PostgresProvider.generateOnlyKnown) {
+        //    return new PostgresCollate(exprInternal, "C");
+        //} else {
             return exprInternal;
-        }
+        //}
     }
 
     private PostgresExpression generateExpressionInternal(int depth, PostgresDataType dataType) throws AssertionError {
