@@ -99,12 +99,12 @@ public final class PostgresIndexGenerator {
         }
 
         sb.append(")");
-        if (Randomly.getBoolean() && method != IndexType.HASH) {
-            sb.append(" INCLUDE(");
-            List<PostgresColumn> columns = randomTable.getRandomNonEmptyColumnSubset();
-            sb.append(columns.stream().map(c -> c.getName()).collect(Collectors.joining(", ")));
-            sb.append(")");
-        }
+        //if (Randomly.getBoolean() && method != IndexType.HASH) {
+        //    sb.append(" INCLUDE(");
+        //    List<PostgresColumn> columns = randomTable.getRandomNonEmptyColumnSubset();
+        //    sb.append(columns.stream().map(c -> c.getName()).collect(Collectors.joining(", ")));
+        //    sb.append(")");
+        //}
         if (Randomly.getBoolean()) {
             sb.append(" WHERE ");
             PostgresExpression expr = new PostgresExpressionGenerator(globalState).setColumns(randomTable.getColumns())

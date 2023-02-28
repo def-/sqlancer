@@ -23,7 +23,7 @@ import sqlancer.common.query.SQLQueryAdapter;
 import sqlancer.common.query.SQLQueryProvider;
 import sqlancer.common.query.SQLancerResultSet;
 import sqlancer.postgres.PostgresOptions.PostgresOracleFactory;
-import sqlancer.postgres.gen.PostgresAlterTableGenerator;
+//import sqlancer.postgres.gen.PostgresAlterTableGenerator;
 //import sqlancer.postgres.gen.PostgresAnalyzeGenerator;
 //import sqlancer.postgres.gen.PostgresClusterGenerator;
 //import sqlancer.postgres.gen.PostgresCommentGenerator;
@@ -75,8 +75,8 @@ public class PostgresProvider extends SQLProviderAdapter<PostgresGlobalState, Po
 
     public enum Action implements AbstractAction<PostgresGlobalState> {
         //ANALYZE(PostgresAnalyzeGenerator::create), //
-        ALTER_TABLE(g -> PostgresAlterTableGenerator.create(g.getSchema().getRandomTable(t -> !t.isView()), g,
-                generateOnlyKnown)), //
+        //ALTER_TABLE(g -> PostgresAlterTableGenerator.create(g.getSchema().getRandomTable(t -> !t.isView()), g,
+        //        generateOnlyKnown)), //
         //CLUSTER(PostgresClusterGenerator::create), //
         COMMIT(g -> {
             SQLQueryAdapter query;
@@ -149,9 +149,9 @@ public class PostgresProvider extends SQLProviderAdapter<PostgresGlobalState, Po
         case COMMIT:
             nrPerformed = r.getInteger(0, 0);
             break;
-        case ALTER_TABLE:
-            nrPerformed = r.getInteger(0, 5);
-            break;
+        //case ALTER_TABLE:
+        //    nrPerformed = r.getInteger(0, 5);
+        //    break;
         //case REINDEX:
         //case RESET:
         //    nrPerformed = r.getInteger(0, 3);
