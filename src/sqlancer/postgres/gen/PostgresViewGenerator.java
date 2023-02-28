@@ -29,10 +29,10 @@ public final class PostgresViewGenerator {
             //if (Randomly.getBoolean()) {
             //    sb.append(Randomly.fromOptions(" TEMP", " TEMPORARY"));
             //}
-            if (Randomly.getBoolean()) {
-                sb.append(" RECURSIVE");
-                recursive = true;
-            }
+            //if (Randomly.getBoolean()) {
+            //    sb.append(" RECURSIVE");
+            //    recursive = true;
+            //}
             materialized = false;
         }
         sb.append(" VIEW ");
