@@ -68,12 +68,12 @@ public final class PostgresViewGenerator {
         PostgresSelect select = PostgresRandomQueryGenerator.createRandomQuery(nrColumns, globalState);
         sb.append(PostgresVisitor.asString(select));
         sb.append(")");
-        if (Randomly.getBoolean() && !materialized && !recursive) {
-            sb.append(" WITH ");
-            sb.append(Randomly.fromOptions("CASCADED", "LOCAL"));
-            sb.append(" CHECK OPTION");
-            errors.add("WITH CHECK OPTION is supported only on automatically updatable views");
-        }
+        //if (Randomly.getBoolean() && !materialized && !recursive) {
+        //    sb.append(" WITH ");
+        //    sb.append(Randomly.fromOptions("CASCADED", "LOCAL"));
+        //    sb.append(" CHECK OPTION");
+        //    errors.add("WITH CHECK OPTION is supported only on automatically updatable views");
+        //}
         PostgresCommon.addGroupingErrors(errors);
         errors.add("already exists");
         errors.add("cannot drop columns from view");
