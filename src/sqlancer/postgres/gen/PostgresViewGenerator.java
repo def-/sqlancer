@@ -16,8 +16,8 @@ public final class PostgresViewGenerator {
     public static SQLQueryAdapter create(PostgresGlobalState globalState) {
         ExpectedErrors errors = new ExpectedErrors();
         StringBuilder sb = new StringBuilder("CREATE");
-        boolean materialized;
-        boolean recursive = false;
+        @SuppressWarnings("unused") boolean materialized;
+        @SuppressWarnings("unused") boolean recursive = false;
         if (Randomly.getBoolean()) {
             sb.append(" MATERIALIZED");
             materialized = true;

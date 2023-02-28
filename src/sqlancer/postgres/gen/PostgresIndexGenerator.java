@@ -12,8 +12,8 @@ import sqlancer.postgres.PostgresGlobalState;
 //import sqlancer.postgres.PostgresSchema.PostgresDataType;
 import sqlancer.postgres.PostgresSchema.PostgresIndex;
 import sqlancer.postgres.PostgresSchema.PostgresTable;
-import sqlancer.postgres.PostgresVisitor;
-import sqlancer.postgres.ast.PostgresExpression;
+//import sqlancer.postgres.PostgresVisitor;
+//import sqlancer.postgres.ast.PostgresExpression;
 
 public final class PostgresIndexGenerator {
 
@@ -65,15 +65,16 @@ public final class PostgresIndexGenerator {
                 if (i != 0) {
                     sb.append(", ");
                 }
-                if (Randomly.getBoolean()) {
+                //if (Randomly.getBoolean()) {
                     sb.append(randomTable.getRandomColumn().getName());
-                } else {
-                    sb.append("(");
-                    PostgresExpression expression = PostgresExpressionGenerator.generateExpression(globalState,
-                            randomTable.getColumns());
-                    sb.append(PostgresVisitor.asString(expression));
-                    sb.append(")");
-                }
+                // ERROR:  column "t0.c0" does not exist
+                //} else {
+                //    sb.append("(");
+                //    PostgresExpression expression = PostgresExpressionGenerator.generateExpression(globalState,
+                //            randomTable.getColumns());
+                //    sb.append(PostgresVisitor.asString(expression));
+                //    sb.append(")");
+                //}
 
                 // if (Randomly.getBoolean()) {
                 // sb.append(" ");
