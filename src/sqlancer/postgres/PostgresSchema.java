@@ -231,11 +231,14 @@ public class PostgresSchema extends AbstractSchema<PostgresGlobalState, Postgres
                         String tableName = rs.getString("table_name");
                         String tableTypeSchema = rs.getString("table_schema");
                         boolean isInsertable = rs.getBoolean("is_insertable_into");
-                        // TODO: also check insertable
-                        // TODO: insert into view?
-                        boolean isView = tableName.startsWith("v"); // tableTypeStr.contains("VIEW") ||
-                                                                    // tableTypeStr.contains("LOCAL TEMPORARY") &&
-                                                                    // !isInsertable;
+                        String type = rs.getString("table_type");
+                        //boolean isView = tableName.startsWith("v"); // tableTypeStr.contains("VIEW") ||
+                        //                                            // tableTypeStr.contains("LOCAL TEMPORARY") &&
+                        //                                            // !isInsertable;
+                        boolean isView = type == "VIEW" || type == "MATERIALIZED VIEW";
+                        if (isView) {
+                          isInsertable = false;
+                        }
                         PostgresTable.TableType tableType = getTableType(tableTypeSchema);
                         List<PostgresColumn> databaseColumns = getTableColumns(con, tableName);
                         List<PostgresIndex> indexes = getIndexes(con, tableName);
