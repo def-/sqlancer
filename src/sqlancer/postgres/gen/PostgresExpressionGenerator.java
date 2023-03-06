@@ -335,9 +335,9 @@ public class PostgresExpressionGenerator implements ExpressionGenerator<Postgres
         //case RANGE:
         case REAL:
         //case INET:
+        case BIT: // Because I mapped BIT to INT
             return PostgresCompoundDataType.create(type);
         case TEXT: // TODO
-        case BIT:
             if (Randomly.getBoolean() || PostgresProvider.generateOnlyKnown /*
                                                                              * The PQS implementation does not check for
                                                                              * size specifications
