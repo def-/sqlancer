@@ -426,15 +426,15 @@ public class PostgresExpressionGenerator implements ExpressionGenerator<Postgres
     }
 
     private enum IntExpression {
-        UNARY_OPERATION, FUNCTION, CAST, BINARY_ARITHMETIC_EXPRESSION
+        UNARY_OPERATION, FUNCTION, /*CAST, */BINARY_ARITHMETIC_EXPRESSION
     }
 
     private PostgresExpression generateIntExpression(int depth) {
         IntExpression option;
         option = Randomly.fromOptions(IntExpression.values());
         switch (option) {
-        case CAST:
-            return new PostgresCastOperation(generateExpression(depth + 1), getCompoundDataType(PostgresDataType.INT));
+        //case CAST:
+        //    return new PostgresCastOperation(generateExpression(depth + 1), getCompoundDataType(PostgresDataType.INT));
         case UNARY_OPERATION:
             PostgresExpression intExpression = generateExpression(depth + 1, PostgresDataType.INT);
             return new PostgresPrefixOperation(intExpression,
