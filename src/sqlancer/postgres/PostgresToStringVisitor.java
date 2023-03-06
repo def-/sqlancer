@@ -5,7 +5,7 @@ import java.util.Optional;
 import sqlancer.Randomly;
 import sqlancer.common.visitor.BinaryOperation;
 import sqlancer.common.visitor.ToStringVisitor;
-//import sqlancer.postgres.PostgresSchema.PostgresDataType;
+import sqlancer.postgres.PostgresSchema.PostgresDataType;
 import sqlancer.postgres.ast.PostgresAggregate;
 import sqlancer.postgres.ast.PostgresBetweenOperation;
 import sqlancer.postgres.ast.PostgresBinaryLogicalOperation;
@@ -196,7 +196,11 @@ public final class PostgresToStringVisitor extends ToStringVisitor<PostgresExpre
 
     @Override
     public void visit(PostgresCastOperation cast) {
-        if (Randomly.getBoolean()) {
+        if (cast.getCompoundType().getDataType() == PostgresDataType.BOOLEAN) {
+            sb.append("(");
+            visit(cast.getExpression());
+            sb.append(" != 0)");
+        } else if (Randomly.getBoolean()) {
             sb.append("CAST(");
             visit(cast.getExpression());
             sb.append(" AS ");
