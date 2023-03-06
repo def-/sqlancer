@@ -235,7 +235,7 @@ public class PostgresSchema extends AbstractSchema<PostgresGlobalState, Postgres
                         //boolean isView = tableName.startsWith("v"); // tableTypeStr.contains("VIEW") ||
                         //                                            // tableTypeStr.contains("LOCAL TEMPORARY") &&
                         //                                            // !isInsertable;
-                        boolean isView = type == "VIEW" || type == "MATERIALIZED VIEW";
+                        boolean isView = type.equals("VIEW") || type.equals("MATERIALIZED VIEW");
                         if (isView) {
                           isInsertable = false;
                         }
