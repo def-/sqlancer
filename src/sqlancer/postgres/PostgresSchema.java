@@ -226,11 +226,11 @@ public class PostgresSchema extends AbstractSchema<PostgresGlobalState, Postgres
             try (Statement s = con.createStatement()) {
                 // ERROR: column "is_insertable_into" does not exist
                 try (ResultSet rs = s.executeQuery(
-                        "SELECT table_name, table_schema, table_type, 1 as is_insertable_into FROM information_schema.tables WHERE table_schema='public' OR table_schema LIKE 'pg_temp_%' ORDER BY table_name;")) {
+                        "SELECT table_name, table_schema, table_type FROM information_schema.tables WHERE table_schema='public' OR table_schema LIKE 'pg_temp_%' ORDER BY table_name;")) {
                     while (rs.next()) {
                         String tableName = rs.getString("table_name");
                         String tableTypeSchema = rs.getString("table_schema");
-                        boolean isInsertable = rs.getBoolean("is_insertable_into");
+                        boolean isInsertable = true;
                         String type = rs.getString("table_type");
                         //boolean isView = tableName.startsWith("v"); // tableTypeStr.contains("VIEW") ||
                         //                                            // tableTypeStr.contains("LOCAL TEMPORARY") &&

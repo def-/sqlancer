@@ -34,10 +34,10 @@ public final class PostgresCommon {
         errors.add("GROUP BY position");
 
         // Materialize, TODO: Better fixes, but they are not common
-        errors.add("does not exist");
-        errors.add("CAST does not support casting from");
-        errors.add("Expected joined table, found");
-        errors.add("Expected right parenthesis, found left parenthesis");
+        //errors.add("does not exist");
+        //errors.add("CAST does not support casting from");
+        //errors.add("Expected joined table, found");
+        //errors.add("Expected right parenthesis, found left parenthesis");
     }
 
     public static void addCommonTableErrors(ExpectedErrors errors) {
