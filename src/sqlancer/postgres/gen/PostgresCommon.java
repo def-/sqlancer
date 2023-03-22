@@ -74,6 +74,7 @@ public final class PostgresCommon {
         errors.add("character number must be positive");
         errors.add("unterminated escape sequence");
         errors.add("cannot be matched");
+        errors.add("clause must have type"); // "not" in having doesn't work
         addToCharFunctionErrors(errors);
         addBitStringOperationErrors(errors);
         addFunctionErrors(errors);
