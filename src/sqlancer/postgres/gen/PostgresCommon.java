@@ -75,6 +75,7 @@ public final class PostgresCommon {
         errors.add("unterminated escape sequence");
         errors.add("cannot be matched");
         errors.add("clause must have type"); // "not" in having doesn't work
+        errors.add("argument must have type"); // "not" in having doesn't work
         addToCharFunctionErrors(errors);
         addBitStringOperationErrors(errors);
         addFunctionErrors(errors);
