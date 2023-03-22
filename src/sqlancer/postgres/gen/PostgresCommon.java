@@ -30,6 +30,7 @@ public final class PostgresCommon {
         errors.add("canceling statement due to statement timeout");
 
         errors.add("non-integer constant in GROUP BY");
+        errors.add("unable to parse column reference in GROUP BY clause");
         errors.add("must appear in the GROUP BY clause or be used in an aggregate function");
         errors.add("GROUP BY position");
 
@@ -72,6 +73,7 @@ public final class PostgresCommon {
         errors.add("could not determine polymorphic type because input has type unknown");
         errors.add("character number must be positive");
         errors.add("unterminated escape sequence");
+        errors.add("cannot be matched");
         addToCharFunctionErrors(errors);
         addBitStringOperationErrors(errors);
         addFunctionErrors(errors);
