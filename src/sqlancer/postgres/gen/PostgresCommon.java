@@ -36,6 +36,7 @@ public final class PostgresCommon {
 
         // Materialize, TODO: Better fixes, but they are not common
         errors.add("does not exist");
+        errors.add("aggregate functions are not allowed in");
         //errors.add("Expected joined table, found");
         //errors.add("Expected right parenthesis, found left parenthesis");
     }
@@ -434,7 +435,7 @@ public final class PostgresCommon {
         errors.add("non-integer constant in GROUP BY"); // TODO
         errors.add("must appear in the GROUP BY clause or be used in an aggregate function");
         errors.add("is not in select list");
-        errors.add("aggregate functions are not allowed in GROUP BY");
+        errors.add("aggregate functions are not allowed in");
     }
 
 }
