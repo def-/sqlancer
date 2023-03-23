@@ -137,6 +137,7 @@ public final class PostgresCommon {
     public static void addCommonInsertUpdateErrors(ExpectedErrors errors) {
         errors.add("value too long for type character");
         errors.add("not found in view targetlist");
+        errors.add("CAST does not support casting from");
     }
 
     public static boolean appendDataType(PostgresDataType type, StringBuilder sb, boolean allowSerial,
