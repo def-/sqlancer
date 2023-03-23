@@ -67,7 +67,7 @@ public class PostgresSchema extends AbstractSchema<PostgresGlobalState, Postgres
         }
 
         public PostgresRowValue getRandomRowValue(SQLConnection con) throws SQLException {
-            String randomRow = String.format("SELECT %s FROM %s ORDER BY RANDOM() LIMIT 1", columnNamesAsString(
+            String randomRow = String.format("SELECT %s FROM %s LIMIT 1", columnNamesAsString(
                     c -> c.getTable().getName() + "." + c.getName() + " AS " + c.getTable().getName() + c.getName()),
                     // columnNamesAsString(c -> "typeof(" + c.getTable().getName() + "." +
                     // c.getName() + ")")
