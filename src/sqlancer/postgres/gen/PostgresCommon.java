@@ -76,6 +76,7 @@ public final class PostgresCommon {
         errors.add("clause must have type"); // "not" in having doesn't work
         errors.add("argument must have type"); // "not" in having doesn't work
         errors.add("CAST does not support casting from");
+        errors.add("aggregate functions are not allowed in");
         errors.add("only defined for finite arguments");
         errors.add("unable to parse column reference in GROUP BY clause"); // TODO
         addToCharFunctionErrors(errors);
