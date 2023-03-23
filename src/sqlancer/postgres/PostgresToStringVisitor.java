@@ -198,10 +198,11 @@ public final class PostgresToStringVisitor extends ToStringVisitor<PostgresExpre
     public void visit(PostgresCastOperation cast) {
         if (cast.getCompoundType().getDataType() == PostgresDataType.BOOLEAN) {
             sb.append("(");
-            visit(cast.getExpression());
-            if (cast.getExpressionType() == PostgresDataType.TEXT) {
+            PostgresExpression expr = cast.getExpression();
+            visit(expr);
+            if (expr.getExpressionType() == PostgresDataType.TEXT) {
                 sb.append(" != '')");
-            } else if (cast.getExpressionType() == PostgresDataType.BOOLEAN) {
+            } else if (expr.getExpressionType() == PostgresDataType.BOOLEAN) {
                 sb.append(" != FALSE)");
             } else {
                 sb.append(" != 0)");
