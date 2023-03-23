@@ -34,6 +34,15 @@ public class PostgresTLPHavingOracle extends PostgresTLPBase {
         String originalQueryString = PostgresVisitor.asString(select);
         List<String> resultSet = ComparatorHelper.getResultSetFirstColumnAsString(originalQueryString, errors, state);
 
+        // Mz: See #18346, have to check if predicate errors by putting it in SELECT first
+        List<PostgresExpression> originalColumns = select.getFetchColumns();
+        List<PostgresExpression> checkColumns = new ArrayList<>();
+        checkColumns.add(predicate);
+        select.setFetchColumns(checkColumns);
+        String errorCheckQueryString = PostgresVisitor.asString(select);
+        ComparatorHelper.getResultSetFirstColumnAsString(errorCheckQueryString, errors, state);
+        select.setFetchColumns(originalColumns);
+
         boolean orderBy = Randomly.getBoolean();
         if (orderBy) {
             select.setOrderByExpressions(gen.generateOrderBy());
