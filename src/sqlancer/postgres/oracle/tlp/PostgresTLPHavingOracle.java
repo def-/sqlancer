@@ -13,6 +13,7 @@ import sqlancer.postgres.ast.PostgresExpression;
 import sqlancer.postgres.gen.PostgresCommon;
 
 public class PostgresTLPHavingOracle extends PostgresTLPBase {
+    private String generatedQueryString;
 
     public PostgresTLPHavingOracle(PostgresGlobalState state) {
         super(state);
@@ -32,6 +33,7 @@ public class PostgresTLPHavingOracle extends PostgresTLPBase {
         select.setGroupByExpressions(gen.generateExpressions(Randomly.smallNumber() + 1));
         select.setHavingClause(null);
         String originalQueryString = PostgresVisitor.asString(select);
+        generatedQueryString = originalQueryString;
         List<String> resultSet = ComparatorHelper.getResultSetFirstColumnAsString(originalQueryString, errors, state);
 
         // Mz: See #18346, have to check if predicate errors by putting it in SELECT first
@@ -73,4 +75,8 @@ public class PostgresTLPHavingOracle extends PostgresTLPBase {
         return expressions;
     }
 
+    @Override
+    public String getLastQueryString() {
+        return generatedQueryString;
+    }
 }

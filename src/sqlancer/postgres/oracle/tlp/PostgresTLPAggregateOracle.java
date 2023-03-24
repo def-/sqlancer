@@ -191,5 +191,4 @@ public class PostgresTLPAggregateOracle extends PostgresTLPBase implements TestO
         }
         return leftSelect;
     }
-
 }

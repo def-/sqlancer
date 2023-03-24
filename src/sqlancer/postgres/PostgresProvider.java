@@ -1,5 +1,6 @@
 package sqlancer.postgres;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.Connection;
@@ -358,4 +359,52 @@ public class PostgresProvider extends SQLProviderAdapter<PostgresGlobalState, Po
         return "postgres";
     }
 
+    @Override
+    public String getQueryPlan(String selectStr, PostgresGlobalState globalState) throws Exception {
+        String queryPlan = "";
+        String explainQuery = "EXPLAIN OPTIMIZED PLAN FOR " + selectStr;
+        if (globalState.getOptions().logEachSelect()) {
+            globalState.getLogger().writeCurrent(explainQuery);
+            try {
+                globalState.getLogger().getCurrentFileWriter().flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        SQLQueryAdapter q = new SQLQueryAdapter(explainQuery);
+        boolean afterProjection = false; // Remove the concrete expression after each Projection operator
+        SQLancerResultSet rs = q.executeAndGet(globalState);
+        if (rs != null) {
+            while (rs.next()) {
+                String targetQueryPlan = rs.getString(1).trim() + ";"; // Unify format
+                if (afterProjection) {
+                    afterProjection = false;
+                    continue;
+                }
+                if (targetQueryPlan.startsWith("Project")) {
+                    afterProjection = true;
+                }
+                // Remove all concrete expressions by keywords
+                if (targetQueryPlan.contains(">") || targetQueryPlan.contains("<") || targetQueryPlan.contains("=")
+                        || targetQueryPlan.contains("*") || targetQueryPlan.contains("+")
+                        || targetQueryPlan.contains("'")) {
+                    continue;
+                }
+                queryPlan += targetQueryPlan;
+            }
+        }
+
+        return queryPlan;
+    }
+
+    @Override
+    protected double[] initializeWeightedAverageReward() {
+        return new double[Action.values().length];
+    }
+
+    @Override
+    protected void executeMutator(int index, PostgresGlobalState globalState) throws Exception {
+        SQLQueryAdapter queryMutateTable = Action.values()[index].getQuery(globalState);
+        globalState.executeStatement(queryMutateTable);
+    }
 }
