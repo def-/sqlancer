@@ -33,6 +33,7 @@ public final class PostgresCommon {
         errors.add("unable to parse column reference in GROUP BY clause");
         errors.add("must appear in the GROUP BY clause or be used in an aggregate function");
         errors.add("GROUP BY position");
+        errors.add("results exceed max size of");
 
         // Materialize, TODO: Better fixes, but they are not common
         errors.add("does not exist");
