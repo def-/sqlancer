@@ -79,17 +79,18 @@ public class PostgresProvider extends SQLProviderAdapter<PostgresGlobalState, Po
         //ALTER_TABLE(g -> PostgresAlterTableGenerator.create(g.getSchema().getRandomTable(t -> !t.isView()), g,
         //        generateOnlyKnown)), //
         //CLUSTER(PostgresClusterGenerator::create), //
-        COMMIT(g -> {
-            SQLQueryAdapter query;
-            if (Randomly.getBoolean()) {
-                query = new SQLQueryAdapter("COMMIT", true);
-            } else if (Randomly.getBoolean()) {
-                query = PostgresTransactionGenerator.executeBegin();
-            } else {
-                query = new SQLQueryAdapter("ROLLBACK", true);
-            }
-            return query;
-        }), //
+        // Disabled because of https://github.com/MaterializeInc/materialize/issues/18392
+        //COMMIT(g -> {
+        //    SQLQueryAdapter query;
+        //    if (Randomly.getBoolean()) {
+        //        query = new SQLQueryAdapter("COMMIT", true);
+        //    } else if (Randomly.getBoolean()) {
+        //        query = PostgresTransactionGenerator.executeBegin();
+        //    } else {
+        //        query = new SQLQueryAdapter("ROLLBACK", true);
+        //    }
+        //    return query;
+        //}), //
         //CREATE_STATISTICS(PostgresStatisticsGenerator::insert), //
         //DROP_STATISTICS(PostgresStatisticsGenerator::remove), //
         DELETE(PostgresDeleteGenerator::create), //
@@ -147,9 +148,9 @@ public class PostgresProvider extends SQLProviderAdapter<PostgresGlobalState, Po
         case DROP_INDEX:
             nrPerformed = r.getInteger(0, 5);
             break;
-        case COMMIT:
-            nrPerformed = r.getInteger(0, 0);
-            break;
+        //case COMMIT:
+        //    nrPerformed = r.getInteger(0, 0);
+        //    break;
         //case ALTER_TABLE:
         //    nrPerformed = r.getInteger(0, 5);
         //    break;
