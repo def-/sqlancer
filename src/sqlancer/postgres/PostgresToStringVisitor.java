@@ -208,7 +208,7 @@ public final class PostgresToStringVisitor extends ToStringVisitor<PostgresExpre
                 sb.append(" != 0)");
             }
         } else if (Randomly.getBoolean()) {
-            if (cast.getCompoundType().getDataType() == PostgresDataType.REAL) {
+            if (cast.getCompoundType().getDataType() == PostgresDataType.REAL || cast.getCompoundType().getDataType() == PostgresDataType.FLOAT) {
                 sb.append("CAST(CAST(");
                 visit(cast.getExpression());
                 sb.append(" AS INT) AS ");
@@ -222,7 +222,7 @@ public final class PostgresToStringVisitor extends ToStringVisitor<PostgresExpre
                 sb.append(")");
             }
         } else {
-            if (cast.getCompoundType().getDataType() == PostgresDataType.REAL) {
+            if (cast.getCompoundType().getDataType() == PostgresDataType.REAL || cast.getCompoundType().getDataType() == PostgresDataType.FLOAT) {
                 sb.append("(");
                 visit(cast.getExpression());
                 sb.append(")::INT::");
