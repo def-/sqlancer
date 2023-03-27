@@ -208,16 +208,31 @@ public final class PostgresToStringVisitor extends ToStringVisitor<PostgresExpre
                 sb.append(" != 0)");
             }
         } else if (Randomly.getBoolean()) {
-            sb.append("CAST(");
-            visit(cast.getExpression());
-            sb.append(" AS ");
-            appendType(cast);
-            sb.append(")");
+            if (cast.getCompoundType().getDataType() == PostgresDataType.REAL) {
+                sb.append("CAST(CAST(");
+                visit(cast.getExpression());
+                sb.append(" AS INT) AS ");
+                appendType(cast);
+                sb.append(")");
+            } else {
+                sb.append("CAST(");
+                visit(cast.getExpression());
+                sb.append(" AS ");
+                appendType(cast);
+                sb.append(")");
+            }
         } else {
-            sb.append("(");
-            visit(cast.getExpression());
-            sb.append(")::");
-            appendType(cast);
+            if (cast.getCompoundType().getDataType() == PostgresDataType.REAL) {
+                sb.append("(");
+                visit(cast.getExpression());
+                sb.append(")::INT::");
+                appendType(cast);
+            } else {
+                sb.append("(");
+                visit(cast.getExpression());
+                sb.append(")::");
+                appendType(cast);
+            }
         }
     }
 

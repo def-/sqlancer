@@ -40,6 +40,7 @@ public final class PostgresCommon {
         errors.add("aggregate functions are not allowed in");
         //errors.add("Expected joined table, found");
         //errors.add("Expected right parenthesis, found left parenthesis");
+        errors.add("is only defined for finite arguments");
     }
 
     public static void addCommonTableErrors(ExpectedErrors errors) {
