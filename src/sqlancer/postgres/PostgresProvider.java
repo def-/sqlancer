@@ -39,7 +39,7 @@ import sqlancer.postgres.gen.PostgresInsertGenerator;
 //import sqlancer.postgres.gen.PostgresSetGenerator;
 //import sqlancer.postgres.gen.PostgresStatisticsGenerator;
 import sqlancer.postgres.gen.PostgresTableGenerator;
-import sqlancer.postgres.gen.PostgresTransactionGenerator;
+//import sqlancer.postgres.gen.PostgresTransactionGenerator;
 //import sqlancer.postgres.gen.PostgresTruncateGenerator;
 import sqlancer.postgres.gen.PostgresUpdateGenerator;
 //import sqlancer.postgres.gen.PostgresVacuumGenerator;
