@@ -30,7 +30,6 @@ public final class PostgresCommon {
         errors.add("canceling statement due to statement timeout");
 
         errors.add("non-integer constant in GROUP BY");
-        errors.add("unable to parse column reference in GROUP BY clause");
         errors.add("must appear in the GROUP BY clause or be used in an aggregate function");
         errors.add("GROUP BY position");
         errors.add("results exceed max size of");
@@ -436,6 +435,7 @@ public final class PostgresCommon {
 
     public static void addGroupingErrors(ExpectedErrors errors) {
         errors.add("non-integer constant in GROUP BY"); // TODO
+        errors.add("unable to parse column reference in GROUP BY clause"); // TODO
         errors.add("must appear in the GROUP BY clause or be used in an aggregate function");
         errors.add("is not in select list");
         errors.add("aggregate functions are not allowed in");
