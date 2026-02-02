@@ -13,6 +13,7 @@ public class MaterializeIndexGenerator extends AbstractIndexGenerator<Materializ
 
     public MaterializeIndexGenerator(MaterializeGlobalState globalState) {
         this.globalState = globalState;
+        this.canAffectSchema = true;
     }
 
     public enum IndexType {
