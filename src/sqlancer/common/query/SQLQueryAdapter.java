@@ -119,19 +119,14 @@ public class SQLQueryAdapter extends Query<SQLConnection> implements Serializabl
      */
     public <G extends GlobalState<?, ?, SQLConnection>> boolean execute(G globalState, boolean reportException,
             String... fills) throws SQLException {
-        return internalExecute(globalState.getConnection(), reportException, fills);
-    }
-
-    protected <G extends GlobalState<?, ?, SQLConnection>> boolean internalExecute(SQLConnection connection,
-            boolean reportException, String... fills) throws SQLException {
         Statement s;
         if (fills.length > 0) {
-            s = connection.prepareStatement(fills[0]);
+            s = globalState.getConnection().prepareStatement(fills[0]);
             for (int i = 1; i < fills.length; i++) {
                 ((PreparedStatement) s).setString(i, fills[i]);
             }
         } else {
-            s = connection.createStatement();
+            s = globalState.getConnection().createStatement();
         }
         try {
             if (fills.length > 0) {
@@ -145,6 +140,9 @@ public class SQLQueryAdapter extends Query<SQLConnection> implements Serializabl
             Main.nrUnsuccessfulActions.addAndGet(1);
             if (reportException) {
                 checkException(e);
+            }
+            if (globalState.getOptions().logEachSelect()) {
+                globalState.getLogger().writeCurrent(" -- " + e.getMessage());
             }
             return false;
         } finally {
@@ -174,19 +172,14 @@ public class SQLQueryAdapter extends Query<SQLConnection> implements Serializabl
 
     public <G extends GlobalState<?, ?, SQLConnection>> SQLancerResultSet executeAndGet(G globalState,
             boolean reportException, String... fills) throws SQLException {
-        return internalExecuteAndGet(globalState.getConnection(), reportException, fills);
-    }
-
-    protected <G extends GlobalState<?, ?, SQLConnection>> SQLancerResultSet internalExecuteAndGet(
-            SQLConnection connection, boolean reportException, String... fills) throws SQLException {
         Statement s;
         if (fills.length > 0) {
-            s = connection.prepareStatement(fills[0]);
+            s = globalState.getConnection().prepareStatement(fills[0]);
             for (int i = 1; i < fills.length; i++) {
                 ((PreparedStatement) s).setString(i, fills[i]);
             }
         } else {
-            s = connection.createStatement();
+            s = globalState.getConnection().createStatement();
         }
         ResultSet result;
         try {
@@ -205,6 +198,9 @@ public class SQLQueryAdapter extends Query<SQLConnection> implements Serializabl
             Main.nrUnsuccessfulActions.addAndGet(1);
             if (reportException) {
                 checkException(e);
+            }
+            if (globalState.getOptions().logEachSelect()) {
+                globalState.getLogger().writeCurrent("-- " + e.getMessage());
             }
             return null;
         }
