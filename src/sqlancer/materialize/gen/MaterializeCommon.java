@@ -192,6 +192,7 @@ public final class MaterializeCommon {
 
     public static void addCommonInsertUpdateErrors(ExpectedErrors errors) {
         errors.addAll(getCommonExpressionErrors());
+        errors.addAll(getCommonInsertUpdateErrors());
     }
 
     public static List<String> getGroupingErrors() {

@@ -75,6 +75,6 @@ public final class MaterializeIndexGenerator {
         errors.add("result of range difference would not be contiguous");
         errors.add("which is part of the partition key");
         MaterializeCommon.addCommonExpressionErrors(errors);
-        return new SQLQueryAdapter(sb.toString(), errors);
+        return new SQLQueryAdapter(sb.toString(), errors, true);
     }
 }
