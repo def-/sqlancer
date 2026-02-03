@@ -663,7 +663,9 @@ public final class Main {
                         int maxNrDbs = options.getMaxGeneratedDatabases();
                         // run without a limit if maxNrDbs == -1
                         for (int i = 0; i < maxNrDbs || maxNrDbs == -1; i++) {
-                            Boolean continueRunning = run(options, execService, executorFactory, r, databaseName);
+                            String postfix = options.keepLogs() ? "_" + i : "";
+                            Boolean continueRunning = run(options, execService, executorFactory, r,
+                                    databaseName + postfix);
                             if (!continueRunning) {
                                 someOneFails.set(true);
                                 break;

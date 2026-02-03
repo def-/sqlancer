@@ -150,6 +150,9 @@ public class MainOptions {
     @Parameter(names = "--canonicalize-sql-strings", description = "Should canonicalize query string (add ';' at the end", arity = 1)
     private boolean canonicalizeSqlString = true; // NOPMD
 
+    @Parameter(names = "--keep-logs", description = "Keep logs from all database iterations instead of overwriting", arity = 1)
+    private boolean keepLogs = true; // NOPMD
+
     public int getMaxExpressionDepth() {
         return maxExpressionDepth;
     }
@@ -341,6 +344,10 @@ public class MainOptions {
 
     public boolean canonicalizeSqlString() {
         return canonicalizeSqlString;
+    }
+
+    public boolean keepLogs() {
+        return keepLogs;
     }
 
 }
