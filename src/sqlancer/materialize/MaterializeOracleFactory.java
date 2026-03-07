@@ -12,6 +12,7 @@ import sqlancer.common.oracle.TestOracle;
 import sqlancer.common.query.ExpectedErrors;
 import sqlancer.materialize.gen.MaterializeCommon;
 import sqlancer.materialize.gen.MaterializeExpressionGenerator;
+import sqlancer.materialize.oracle.MaterializeCODDTestOracle;
 import sqlancer.materialize.oracle.MaterializePivotedQuerySynthesisOracle;
 import sqlancer.materialize.oracle.tlp.MaterializeTLPAggregateOracle;
 import sqlancer.materialize.oracle.tlp.MaterializeTLPHavingOracle;
@@ -64,6 +65,12 @@ public enum MaterializeOracleFactory implements OracleFactory<MaterializeGlobalS
             oracles.add(HAVING.create(globalState));
             oracles.add(new MaterializeTLPAggregateOracle(globalState));
             return new CompositeTestOracle<MaterializeGlobalState>(oracles, globalState);
+        }
+    },
+    CODDTest {
+        @Override
+        public TestOracle<MaterializeGlobalState> create(MaterializeGlobalState globalState) throws SQLException {
+            return new MaterializeCODDTestOracle(globalState);
         }
     };
 

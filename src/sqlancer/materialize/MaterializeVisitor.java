@@ -5,6 +5,7 @@ import java.util.List;
 import sqlancer.materialize.MaterializeSchema.MaterializeColumn;
 import sqlancer.materialize.MaterializeSchema.MaterializeDataType;
 import sqlancer.materialize.ast.MaterializeAggregate;
+import sqlancer.materialize.ast.MaterializeAlias;
 import sqlancer.materialize.ast.MaterializeBetweenOperation;
 import sqlancer.materialize.ast.MaterializeBinaryLogicalOperation;
 import sqlancer.materialize.ast.MaterializeCastOperation;
@@ -13,16 +14,22 @@ import sqlancer.materialize.ast.MaterializeConstant;
 import sqlancer.materialize.ast.MaterializeExpression;
 import sqlancer.materialize.ast.MaterializeFunction;
 import sqlancer.materialize.ast.MaterializeInOperation;
+import sqlancer.materialize.ast.MaterializeAllOperator;
+import sqlancer.materialize.ast.MaterializeAnyOperator;
+import sqlancer.materialize.ast.MaterializeExists;
+import sqlancer.materialize.ast.MaterializeExpressionBag;
 import sqlancer.materialize.ast.MaterializeLikeOperation;
 import sqlancer.materialize.ast.MaterializeOrderByTerm;
 import sqlancer.materialize.ast.MaterializePOSIXRegularExpression;
 import sqlancer.materialize.ast.MaterializePostfixOperation;
 import sqlancer.materialize.ast.MaterializePostfixText;
 import sqlancer.materialize.ast.MaterializePrefixOperation;
+import sqlancer.materialize.ast.MaterializeResultMap;
 import sqlancer.materialize.ast.MaterializeSelect;
 import sqlancer.materialize.ast.MaterializeSelect.MaterializeFromTable;
 import sqlancer.materialize.ast.MaterializeSelect.MaterializeSubquery;
 import sqlancer.materialize.ast.MaterializeSimilarTo;
+import sqlancer.materialize.ast.MaterializeValues;
 import sqlancer.materialize.gen.MaterializeExpressionGenerator;
 
 public interface MaterializeVisitor {
@@ -63,6 +70,21 @@ public interface MaterializeVisitor {
 
     void visit(MaterializeLikeOperation op);
 
+    void visit(MaterializeAlias alias);
+
+    // CODDTest
+    void visit(MaterializeExists existsExpr);
+
+    void visit(MaterializeExpressionBag exprBag);
+
+    void visit(MaterializeValues values);
+
+    void visit(MaterializeResultMap expr);
+
+    void visit(MaterializeAllOperator allOperation);
+
+    void visit(MaterializeAnyOperator anyOperation);
+
     default void visit(MaterializeExpression expression) {
         if (expression instanceof MaterializeConstant) {
             visit((MaterializeConstant) expression);
@@ -98,6 +120,20 @@ public interface MaterializeVisitor {
             visit((MaterializeSubquery) expression);
         } else if (expression instanceof MaterializeLikeOperation) {
             visit((MaterializeLikeOperation) expression);
+        } else if (expression instanceof MaterializeAlias) {
+            visit((MaterializeAlias) expression);
+        } else if (expression instanceof MaterializeExists) {
+            visit((MaterializeExists) expression);
+        } else if (expression instanceof MaterializeExpressionBag) {
+            visit((MaterializeExpressionBag) expression);
+        } else if (expression instanceof MaterializeValues) {
+            visit((MaterializeValues) expression);
+        } else if (expression instanceof MaterializeResultMap) {
+            visit((MaterializeResultMap) expression);
+        } else if (expression instanceof MaterializeAllOperator) {
+            visit((MaterializeAllOperator) expression);
+        } else if (expression instanceof MaterializeAnyOperator) {
+            visit((MaterializeAnyOperator) expression);
         } else {
             throw new AssertionError(expression);
         }

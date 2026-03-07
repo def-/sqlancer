@@ -1,12 +1,17 @@
 package sqlancer.materialize;
 
 import sqlancer.materialize.ast.MaterializeAggregate;
+import sqlancer.materialize.ast.MaterializeAlias;
+import sqlancer.materialize.ast.MaterializeAllOperator;
+import sqlancer.materialize.ast.MaterializeAnyOperator;
 import sqlancer.materialize.ast.MaterializeBetweenOperation;
 import sqlancer.materialize.ast.MaterializeBinaryLogicalOperation;
 import sqlancer.materialize.ast.MaterializeCastOperation;
 import sqlancer.materialize.ast.MaterializeColumnValue;
 import sqlancer.materialize.ast.MaterializeConstant;
+import sqlancer.materialize.ast.MaterializeExists;
 import sqlancer.materialize.ast.MaterializeExpression;
+import sqlancer.materialize.ast.MaterializeExpressionBag;
 import sqlancer.materialize.ast.MaterializeFunction;
 import sqlancer.materialize.ast.MaterializeInOperation;
 import sqlancer.materialize.ast.MaterializeLikeOperation;
@@ -15,10 +20,12 @@ import sqlancer.materialize.ast.MaterializePOSIXRegularExpression;
 import sqlancer.materialize.ast.MaterializePostfixOperation;
 import sqlancer.materialize.ast.MaterializePostfixText;
 import sqlancer.materialize.ast.MaterializePrefixOperation;
+import sqlancer.materialize.ast.MaterializeResultMap;
 import sqlancer.materialize.ast.MaterializeSelect;
 import sqlancer.materialize.ast.MaterializeSelect.MaterializeFromTable;
 import sqlancer.materialize.ast.MaterializeSelect.MaterializeSubquery;
 import sqlancer.materialize.ast.MaterializeSimilarTo;
+import sqlancer.materialize.ast.MaterializeValues;
 
 public final class MaterializeExpectedValueVisitor implements MaterializeVisitor {
 
@@ -157,6 +164,46 @@ public final class MaterializeExpectedValueVisitor implements MaterializeVisitor
         print(op);
         visit(op.getLeft());
         visit(op.getRight());
+    }
+
+    @Override
+    public void visit(MaterializeAlias alias) {
+        visit(alias.getExpression());
+    }
+
+    @Override
+    public void visit(MaterializeExists existsExpr) {
+        print(existsExpr);
+        visit(existsExpr.getExpression());
+    }
+
+    @Override
+    public void visit(MaterializeExpressionBag exprBag) {
+        visit(exprBag.getInnerExpr());
+    }
+
+    @Override
+    public void visit(MaterializeValues values) {
+        // no expected value computation for VALUES
+    }
+
+    @Override
+    public void visit(MaterializeResultMap expr) {
+        // no expected value computation for ResultMap
+    }
+
+    @Override
+    public void visit(MaterializeAllOperator allOperation) {
+        print(allOperation);
+        visit(allOperation.getLeftExpr());
+        visit(allOperation.getRightExpr());
+    }
+
+    @Override
+    public void visit(MaterializeAnyOperator anyOperation) {
+        print(anyOperation);
+        visit(anyOperation.getLeftExpr());
+        visit(anyOperation.getRightExpr());
     }
 
 }

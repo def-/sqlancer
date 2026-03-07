@@ -9,6 +9,10 @@ public abstract class MaterializeConstant implements MaterializeExpression {
 
     public abstract String getTextRepresentation();
 
+    public String toStringForComparison() {
+        return getTextRepresentation();
+    }
+
     public abstract String getUnquotedTextRepresentation();
 
     public static class BooleanConstant extends MaterializeConstant {
@@ -423,6 +427,18 @@ public abstract class MaterializeConstant implements MaterializeExpression {
         }
 
         @Override
+        public String toStringForComparison() {
+            String s = getTextRepresentation();
+            if (s.contains(".") && s.length() > 5) {
+                s = s.substring(0, 5);
+            }
+            if (s.equals("0.0")) {
+                return "0";
+            }
+            return s;
+        }
+
+        @Override
         public MaterializeDataType getExpressionType() {
             return MaterializeDataType.DECIMAL;
         }
@@ -447,6 +463,25 @@ public abstract class MaterializeConstant implements MaterializeExpression {
         }
 
         @Override
+        public String toStringForComparison() {
+            if (Float.isNaN(val)) {
+                return "NaN";
+            }
+            if (Float.isInfinite(val)) {
+                return val > 0 ? "Infinity" : "-Infinity";
+            }
+            String s = new BigDecimal(val).toPlainString();
+            int dotIdx = s.indexOf('.');
+            if (dotIdx > 7) {
+                return s.substring(0, dotIdx);
+            }
+            if (s.length() > 5) {
+                s = s.substring(0, 5);
+            }
+            return s;
+        }
+
+        @Override
         public MaterializeDataType getExpressionType() {
             return MaterializeDataType.FLOAT;
         }
@@ -468,6 +503,25 @@ public abstract class MaterializeConstant implements MaterializeExpression {
             } else {
                 return "'" + val + "'";
             }
+        }
+
+        @Override
+        public String toStringForComparison() {
+            if (Double.isNaN(val)) {
+                return "NaN";
+            }
+            if (Double.isInfinite(val)) {
+                return val > 0 ? "Infinity" : "-Infinity";
+            }
+            String s = BigDecimal.valueOf(val).toPlainString();
+            int dotIdx = s.indexOf('.');
+            if (dotIdx > 7) {
+                return s.substring(0, dotIdx);
+            }
+            if (s.length() > 5) {
+                s = s.substring(0, 5);
+            }
+            return s;
         }
 
         @Override

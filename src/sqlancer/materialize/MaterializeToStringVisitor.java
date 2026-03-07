@@ -1,18 +1,26 @@
 package sqlancer.materialize;
 
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Optional;
 
 import sqlancer.Randomly;
 import sqlancer.common.visitor.BinaryOperation;
 import sqlancer.common.visitor.ToStringVisitor;
 import sqlancer.materialize.MaterializeSchema.MaterializeDataType;
+import sqlancer.materialize.MaterializeSchema.MaterializeColumn;
 import sqlancer.materialize.ast.MaterializeAggregate;
+import sqlancer.materialize.ast.MaterializeAlias;
+import sqlancer.materialize.ast.MaterializeAllOperator;
+import sqlancer.materialize.ast.MaterializeAnyOperator;
 import sqlancer.materialize.ast.MaterializeBetweenOperation;
 import sqlancer.materialize.ast.MaterializeBinaryLogicalOperation;
 import sqlancer.materialize.ast.MaterializeCastOperation;
 import sqlancer.materialize.ast.MaterializeColumnValue;
 import sqlancer.materialize.ast.MaterializeConstant;
+import sqlancer.materialize.ast.MaterializeExists;
 import sqlancer.materialize.ast.MaterializeExpression;
+import sqlancer.materialize.ast.MaterializeExpressionBag;
 import sqlancer.materialize.ast.MaterializeFunction;
 import sqlancer.materialize.ast.MaterializeInOperation;
 import sqlancer.materialize.ast.MaterializeJoin;
@@ -23,10 +31,12 @@ import sqlancer.materialize.ast.MaterializePOSIXRegularExpression;
 import sqlancer.materialize.ast.MaterializePostfixOperation;
 import sqlancer.materialize.ast.MaterializePostfixText;
 import sqlancer.materialize.ast.MaterializePrefixOperation;
+import sqlancer.materialize.ast.MaterializeResultMap;
 import sqlancer.materialize.ast.MaterializeSelect;
 import sqlancer.materialize.ast.MaterializeSelect.MaterializeFromTable;
 import sqlancer.materialize.ast.MaterializeSelect.MaterializeSubquery;
 import sqlancer.materialize.ast.MaterializeSimilarTo;
+import sqlancer.materialize.ast.MaterializeValues;
 
 public final class MaterializeToStringVisitor extends ToStringVisitor<MaterializeExpression>
         implements MaterializeVisitor {
@@ -330,6 +340,149 @@ public final class MaterializeToStringVisitor extends ToStringVisitor<Materializ
     @Override
     public void visit(MaterializeLikeOperation op) {
         super.visit((BinaryOperation<MaterializeExpression>) op);
+    }
+
+    @Override
+    public void visit(MaterializeAlias alias) {
+        MaterializeExpression e = alias.getExpression();
+        if (e instanceof MaterializeSelect) {
+            sb.append("(");
+        }
+        visit(e);
+        if (e instanceof MaterializeSelect) {
+            sb.append(")");
+        }
+        sb.append(" AS ");
+        sb.append(alias.getAlias());
+    }
+
+    @Override
+    public void visit(MaterializeExists existsExpr) {
+        if (existsExpr.getNegated()) {
+            sb.append(" NOT");
+        }
+        sb.append(" EXISTS(");
+        visit(existsExpr.getExpression());
+        sb.append(")");
+    }
+
+    @Override
+    public void visit(MaterializeExpressionBag exprBag) {
+        visit(exprBag.getInnerExpr());
+    }
+
+    @Override
+    public void visit(MaterializeValues values) {
+        LinkedHashMap<MaterializeColumn, List<MaterializeConstant>> vs = values.getValues();
+        int size = vs.values().iterator().next().size();
+        sb.append("(VALUES ");
+        for (int i = 0; i < size; i++) {
+            sb.append("(");
+            boolean isFirstColumn = true;
+            for (MaterializeColumn c : vs.keySet()) {
+                if (!isFirstColumn) {
+                    sb.append(", ");
+                }
+                MaterializeConstant constant = vs.get(c).get(i);
+                sb.append(constant.toString());
+                if (!constant.isNull()) {
+                    if (c.getType() != null) {
+                        sb.append("::" + materializeDataTypeToString(c.getType()));
+                    }
+                }
+                isFirstColumn = false;
+            }
+            sb.append(")");
+            if (i < size - 1) {
+                sb.append(", ");
+            }
+        }
+        sb.append(")");
+    }
+
+    @Override
+    public void visit(MaterializeResultMap expr) {
+        LinkedHashMap<MaterializeColumnValue, List<MaterializeConstant>> dbstate = expr.getDbStates();
+        List<MaterializeConstant> result = expr.getResult();
+        int size = dbstate.values().iterator().next().size();
+        if (size == 0) {
+            sb.append(" NULL ");
+            return;
+        }
+        sb.append(" CASE ");
+        for (int i = 0; i < size; i++) {
+            sb.append("WHEN ");
+            boolean isFirstCondition = true;
+            for (MaterializeColumnValue columnVal : dbstate.keySet()) {
+                if (!isFirstCondition) {
+                    sb.append(" AND ");
+                }
+                visit(columnVal);
+                MaterializeConstant constant = dbstate.get(columnVal).get(i);
+                if (constant.isNull()) {
+                    sb.append(" IS NULL");
+                } else {
+                    sb.append(" = ");
+                    visit(constant);
+                    if (columnVal.getColumn().getType() != null) {
+                        sb.append("::" + materializeDataTypeToString(columnVal.getColumn().getType()));
+                    }
+                }
+                isFirstCondition = false;
+            }
+            sb.append(" THEN ");
+            visit(result.get(i));
+            if (!result.get(i).isNull()) {
+                if (expr.getResultType() != null) {
+                    sb.append("::" + materializeDataTypeToString(expr.getResultType()));
+                }
+            }
+            sb.append(" ");
+        }
+        sb.append("END ");
+    }
+
+    @Override
+    public void visit(MaterializeAllOperator allOperation) {
+        sb.append("(");
+        visit(allOperation.getLeftExpr());
+        sb.append(") ");
+        sb.append(allOperation.getOperator());
+        sb.append(" ALL (");
+        visit(allOperation.getRightExpr());
+        sb.append(")");
+    }
+
+    @Override
+    public void visit(MaterializeAnyOperator anyOperation) {
+        sb.append("(");
+        visit(anyOperation.getLeftExpr());
+        sb.append(") ");
+        sb.append(anyOperation.getOperator());
+        sb.append(" ANY (");
+        visit(anyOperation.getRightExpr());
+        sb.append(")");
+    }
+
+    private static String materializeDataTypeToString(MaterializeDataType type) {
+        switch (type) {
+        case BOOLEAN:
+            return "BOOLEAN";
+        case INT:
+            return "INT";
+        case TEXT:
+            return "TEXT";
+        case DECIMAL:
+            return "DECIMAL";
+        case FLOAT:
+            return "REAL";
+        case REAL:
+            return "FLOAT";
+        case BIT:
+            return "INT";
+        default:
+            throw new AssertionError(type);
+        }
     }
 
 }

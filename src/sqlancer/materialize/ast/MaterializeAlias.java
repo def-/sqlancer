@@ -1,8 +1,6 @@
 package sqlancer.materialize.ast;
 
-import sqlancer.common.visitor.UnaryOperation;
-
-public class MaterializeAlias implements UnaryOperation<MaterializeExpression>, MaterializeExpression {
+public class MaterializeAlias implements MaterializeExpression {
 
     private final MaterializeExpression expr;
     private final String alias;
@@ -12,24 +10,12 @@ public class MaterializeAlias implements UnaryOperation<MaterializeExpression>, 
         this.alias = alias;
     }
 
-    @Override
     public MaterializeExpression getExpression() {
         return expr;
     }
 
-    @Override
-    public String getOperatorRepresentation() {
-        return " as " + alias;
-    }
-
-    @Override
-    public OperatorKind getOperatorKind() {
-        return OperatorKind.POSTFIX;
-    }
-
-    @Override
-    public boolean omitBracketsWhenPrinting() {
-        return true;
+    public String getAlias() {
+        return alias;
     }
 
 }
