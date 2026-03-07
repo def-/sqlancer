@@ -186,6 +186,9 @@ public class MaterializeProvider extends SQLProviderAdapter<MaterializeGlobalSta
             throw new AssertionError(e);
         }
         Connection con = DriverManager.getConnection("jdbc:" + entryURL, username, password);
+        try (Statement s = con.createStatement()) {
+            s.execute("SET CLUSTER = 'quickstart'");
+        }
         globalState.getState().logStatement(String.format("\\c %s;", entryDatabaseName));
         globalState.getState().logStatement("DROP DATABASE IF EXISTS " + databaseName);
         createDatabaseCommand = getCreateDatabaseCommand(globalState);
@@ -219,6 +222,7 @@ public class MaterializeProvider extends SQLProviderAdapter<MaterializeGlobalSta
             // Serializable transaction isolation is much faster than Strict
             // Serializable and should guarantee enough for SQLancer:
             // https://materialize.com/docs/overview/isolation-level/
+            s.execute("SET CLUSTER = 'quickstart'");
             s.execute("SET transaction_isolation = 'SERIALIZABLE'");
             // Make sure tables still are visible immediately by not using an
             // index for them, see
