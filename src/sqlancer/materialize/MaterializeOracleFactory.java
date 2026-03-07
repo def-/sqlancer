@@ -12,6 +12,7 @@ import sqlancer.common.oracle.TestOracle;
 import sqlancer.common.query.ExpectedErrors;
 import sqlancer.materialize.gen.MaterializeCommon;
 import sqlancer.materialize.gen.MaterializeExpressionGenerator;
+import sqlancer.materialize.oracle.MaterializeDQPOracle;
 import sqlancer.materialize.oracle.MaterializePivotedQuerySynthesisOracle;
 import sqlancer.materialize.oracle.tlp.MaterializeTLPAggregateOracle;
 import sqlancer.materialize.oracle.tlp.MaterializeTLPHavingOracle;
@@ -55,6 +56,12 @@ public enum MaterializeOracleFactory implements OracleFactory<MaterializeGlobalS
             return new MaterializeTLPHavingOracle(globalState);
         }
 
+    },
+    DQP {
+        @Override
+        public TestOracle<MaterializeGlobalState> create(MaterializeGlobalState globalState) throws SQLException {
+            return new MaterializeDQPOracle(globalState);
+        }
     },
     QUERY_PARTITIONING {
         @Override
