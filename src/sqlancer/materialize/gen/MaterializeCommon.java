@@ -37,6 +37,7 @@ public final class MaterializeCommon {
         errors.add("result exceeds max size of");
 
         errors.add("does not exist");
+        errors.add("unknown catalog item");
         errors.add("aggregate functions are not allowed in");
         errors.add("is only defined for finite arguments");
 
