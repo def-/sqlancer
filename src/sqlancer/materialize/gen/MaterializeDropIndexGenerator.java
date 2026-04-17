@@ -16,7 +16,7 @@ public final class MaterializeDropIndexGenerator {
     }
 
     public static SQLQueryAdapter create(MaterializeGlobalState globalState) {
-        MaterializeTable randomTable = globalState.getSchema().getRandomTable();
+        MaterializeTable randomTable = globalState.getSchema().getRandomTableOrBailout();
         List<MaterializeIndex> indexes = randomTable.getIndexes();
         StringBuilder sb = new StringBuilder();
         sb.append("DROP INDEX ");
