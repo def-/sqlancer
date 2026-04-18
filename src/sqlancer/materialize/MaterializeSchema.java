@@ -320,6 +320,9 @@ public class MaterializeSchema extends AbstractSchema<MaterializeGlobalState, Ma
     }
 
     public MaterializeTables getRandomTableNonEmptyTables() {
+        if (getDatabaseTables().isEmpty()) {
+            throw new IgnoreMeException();
+        }
         return new MaterializeTables(Randomly.nonEmptySubset(getDatabaseTables()));
     }
 
