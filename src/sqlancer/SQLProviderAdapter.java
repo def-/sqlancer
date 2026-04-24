@@ -22,14 +22,24 @@ public abstract class SQLProviderAdapter<G extends SQLGlobalState<O, ? extends A
     @Override
     protected void checkViewsAreValid(G globalState) {
         List<? extends AbstractTable<?, ?, ?>> views = globalState.getSchema().getViews();
+        boolean droppedAny = false;
         for (AbstractTable<?, ?, ?> view : views) {
             SQLQueryAdapter q = new SQLQueryAdapter("SELECT 1 FROM " + view.getName() + " LIMIT 1");
             try {
                 if (!q.execute(globalState)) {
                     dropView(globalState, view.getName());
+                    droppedAny = true;
                 }
             } catch (Throwable t) {
                 dropView(globalState, view.getName());
+                droppedAny = true;
+            }
+        }
+        if (droppedAny) {
+            try {
+                globalState.updateSchema();
+            } catch (Exception e) {
+                throw new IgnoreMeException();
             }
         }
     }
@@ -38,7 +48,9 @@ public abstract class SQLProviderAdapter<G extends SQLGlobalState<O, ? extends A
         try {
             globalState.executeStatement(new SQLQueryAdapter("DROP VIEW " + viewName, true));
         } catch (Throwable t2) {
-            throw new IgnoreMeException();
+            // Ignore errors — the view may already be gone or the schema update
+            // inside executeStatement may have failed. The caller will force a
+            // schema refresh after all drops.
         }
     }
 }
