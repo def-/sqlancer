@@ -63,9 +63,6 @@ public final class MaterializeViewGenerator {
         errors.add("materialized views must not use temporary tables or views");
         errors.add("does not have the form non-recursive-term UNION [ALL] recursive-term");
         errors.add("is not a view");
-        errors.add("non-integer constant in DISTINCT ON");
-        errors.add("unable to parse column reference in DISTINCT ON clause");
-        errors.add("SELECT DISTINCT ON expressions must match initial ORDER BY expressions");
         MaterializeCommon.addCommonExpressionErrors(errors);
         return new SQLQueryAdapter(sb.toString(), errors, true);
     }

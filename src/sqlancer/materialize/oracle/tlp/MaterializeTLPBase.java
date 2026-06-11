@@ -17,7 +17,6 @@ import sqlancer.materialize.MaterializeSchema.MaterializeDataType;
 import sqlancer.materialize.MaterializeSchema.MaterializeTable;
 import sqlancer.materialize.MaterializeSchema.MaterializeTables;
 import sqlancer.materialize.ast.MaterializeColumnValue;
-import sqlancer.materialize.ast.MaterializeConstant;
 import sqlancer.materialize.ast.MaterializeExpression;
 import sqlancer.materialize.ast.MaterializeJoin;
 import sqlancer.materialize.ast.MaterializeJoin.MaterializeJoinType;
@@ -129,13 +128,9 @@ public class MaterializeTLPBase
         if (Randomly.getBooleanWithRatherLowProbability()) {
             select.setOrderByClauses(gen.generateOrderBys());
         }
-        if (Randomly.getBoolean()) {
-            select.setLimitClause(MaterializeConstant.createIntConstant(Randomly.getPositiveOrZeroNonCachedInteger()));
-            if (Randomly.getBoolean()) {
-                select.setOffsetClause(
-                        MaterializeConstant.createIntConstant(Randomly.getPositiveOrZeroNonCachedInteger()));
-            }
-        }
+        // Don't generate LIMIT/OFFSET: without a fully-determining ORDER BY they
+        // return an arbitrary subset of the rows, so the partitioned queries compared
+        // by the TLP oracles can legitimately disagree with the original query.
         if (Randomly.getBooleanWithRatherLowProbability()) {
             select.setForClause(ForClause.getRandom());
         }

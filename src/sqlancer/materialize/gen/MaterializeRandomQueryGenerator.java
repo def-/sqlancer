@@ -8,7 +8,6 @@ import sqlancer.Randomly;
 import sqlancer.materialize.MaterializeGlobalState;
 import sqlancer.materialize.MaterializeSchema.MaterializeDataType;
 import sqlancer.materialize.MaterializeSchema.MaterializeTables;
-import sqlancer.materialize.ast.MaterializeConstant;
 import sqlancer.materialize.ast.MaterializeExpression;
 import sqlancer.materialize.ast.MaterializeSelect;
 import sqlancer.materialize.ast.MaterializeSelect.ForClause;
@@ -30,9 +29,13 @@ public final class MaterializeRandomQueryGenerator {
         }
         MaterializeSelect select = new MaterializeSelect();
         select.setSelectType(SelectType.getRandom());
-        if (select.getSelectOption() == SelectType.DISTINCT && Randomly.getBoolean()) {
-            select.setDistinctOnClause(gen.generateExpression(0));
-        }
+        // Queries generated here are used as view definitions, and views are read by
+        // result-comparison oracles. DISTINCT ON, LIMIT, and OFFSET without a
+        // fully-determining ORDER BY return an arbitrary representative/subset of the
+        // rows, so two queries reading different columns of the same view can
+        // legitimately disagree (e.g. Materialize's TopK picks the first row in
+        // arrangement order, which depends on the projected columns). Therefore none
+        // of these clauses may be generated here.
         select.setFromList(tables.getTables().stream().map(t -> new MaterializeFromTable(t, Randomly.getBoolean()))
                 .collect(Collectors.toList()));
         select.setFetchColumns(columns);
@@ -47,13 +50,6 @@ public final class MaterializeRandomQueryGenerator {
         }
         if (Randomly.getBooleanWithRatherLowProbability()) {
             select.setOrderByClauses(gen.generateOrderBys());
-        }
-        if (Randomly.getBoolean()) {
-            select.setLimitClause(MaterializeConstant.createIntConstant(Randomly.getPositiveOrZeroNonCachedInteger()));
-            if (Randomly.getBoolean()) {
-                select.setOffsetClause(
-                        MaterializeConstant.createIntConstant(Randomly.getPositiveOrZeroNonCachedInteger()));
-            }
         }
         if (Randomly.getBooleanWithRatherLowProbability()) {
             select.setForClause(ForClause.getRandom());
