@@ -235,6 +235,16 @@ public class MaterializeSchema extends AbstractSchema<MaterializeGlobalState, Ma
                         }
                         MaterializeTable.TableType tableType = getTableType(tableTypeSchema);
                         List<MaterializeColumn> databaseColumns = getTableColumns(con, tableName);
+                        // Listing tables and listing their columns are two separate
+                        // information_schema queries. Under concurrent DDL a table can show up in
+                        // information_schema.tables while the follow-up information_schema.columns
+                        // read does not (yet) return its columns, yielding an empty column list. A
+                        // column-less table is unusable (e.g. getRandomNonEmptyColumnSubset asserts
+                        // on an empty column set), so skip it. It reappears with its columns on the
+                        // next schema refresh.
+                        if (databaseColumns.isEmpty()) {
+                            continue;
+                        }
                         List<MaterializeIndex> indexes = getIndexes(con, tableName);
                         List<MaterializeStatisticsObject> statistics = getStatistics(con);
                         MaterializeTable t = new MaterializeTable(tableName, databaseColumns, indexes, tableType,
