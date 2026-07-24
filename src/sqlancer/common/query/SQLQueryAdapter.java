@@ -16,6 +16,7 @@ public class SQLQueryAdapter extends Query<SQLConnection> implements Serializabl
     private final String query;
     private final ExpectedErrors expectedErrors;
     private final boolean couldAffectSchema;
+    private int maxRows;
 
     public SQLQueryAdapter(String query) {
         this(query, new ExpectedErrors());
@@ -64,6 +65,20 @@ public class SQLQueryAdapter extends Query<SQLConnection> implements Serializabl
         if (!couldAffectSchema && guessAffectSchemaFromQuery(query)) {
             throw new AssertionError("CREATE TABLE statements should set couldAffectSchema to true");
         }
+    }
+
+    /**
+     * Bound the number of rows the JDBC driver buffers for {@link #executeAndGet}. The driver otherwise buffers the
+     * entire result set in memory, so an unexpectedly large result can exhaust the heap.
+     *
+     * @param maxRows
+     *            the maximum number of rows to buffer, or zero (the default) for unbounded
+     *
+     * @return this adapter, for chaining
+     */
+    public SQLQueryAdapter setMaxRows(int maxRows) {
+        this.maxRows = maxRows;
+        return this;
     }
 
     @Override
@@ -180,6 +195,9 @@ public class SQLQueryAdapter extends Query<SQLConnection> implements Serializabl
             }
         } else {
             s = globalState.getConnection().createStatement();
+        }
+        if (maxRows > 0) {
+            s.setMaxRows(maxRows);
         }
         ResultSet result;
         try {

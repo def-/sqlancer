@@ -23,6 +23,13 @@ import sqlancer.common.schema.AbstractTables;
 public class NoRECOracle<Z extends Select<J, E, T, C>, J extends Join<E, T, C>, E extends Expression<C>, S extends AbstractSchema<?, T>, T extends AbstractTable<C, ?, ?>, C extends AbstractTableColumn<?, ?>, G extends SQLGlobalState<?, S>>
         implements TestOracle<G> {
 
+    /**
+     * Cap on the rows counted client-side for the optimized query. A NoREC check can range over a cross-product of
+     * tables whose result set is enormous. The JDBC driver buffers the full result set in memory, which exhausts the
+     * heap and wedges the run. Past this many rows the count is unreliable anyway, so the check is skipped.
+     */
+    private static final int MAX_COUNTED_ROWS = 1_000_000;
+
     private final G state;
 
     private NoRECGenerator<Z, J, E, T, C> gen;
@@ -122,6 +129,7 @@ public class NoRECOracle<Z extends Select<J, E, T, C>, J extends Join<E, T, C>, 
 
     private int countRows(String queryString, ExpectedErrors errors, SQLGlobalState<?, ?> state) {
         SQLQueryAdapter q = new SQLQueryAdapter(queryString, errors, false, false);
+        q.setMaxRows(MAX_COUNTED_ROWS);
 
         int count = 0;
         try (SQLancerResultSet rs = q.executeAndGet(state)) {
@@ -141,6 +149,10 @@ public class NoRECOracle<Z extends Select<J, E, T, C>, J extends Join<E, T, C>, 
                 throw (IgnoreMeException) e;
             }
             throw new AssertionError(q.getQueryString(), e);
+        }
+        // The result set hit the cap, so the count is truncated and cannot be compared. Skip the check.
+        if (count >= MAX_COUNTED_ROWS) {
+            return -1;
         }
         return count;
     }
